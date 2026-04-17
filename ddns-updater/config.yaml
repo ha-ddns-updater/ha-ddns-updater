@@ -5,11 +5,10 @@ description: Universal DNS updater with support for multiple DNS providers utili
 arch:
   - aarch64
   - amd64
-  - armv7
 url: "https://gitlab.com/ha-ddns-updater/ha-ddns-updater"
-startup: application
+# startup: application
 webui: "http://[HOST]:[PORT:8000]/"
-boot: auto
+# boot: auto
 ports:
   "8000/tcp": 8000
 ports_description:

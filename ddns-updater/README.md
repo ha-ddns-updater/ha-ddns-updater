@@ -60,7 +60,7 @@ For issues or questions:
 ```bash
 TAG=0.0.0
 buildah manifest create ha-ddns-updater:$TAG
-# upstream has linux/386,linux/amd64,linux/arm/v6,linux/arm/v7,linux/arm64,linux/ppc64le,linux/riscv64,linux/s390x but HA only supports linux/amd64, linux/arm64 and linux/arm/v7 so we only build those
-buildah bud --jobs=4 --platform=linux/amd64,linux/arm/v7,linux/arm64 --manifest ha-ddns-updater:$TAG --layers --format docker -f Dockerfile -t docker.io/haddnsupdater/ha-ddns-updater:$TAG .
+# upstream has linux/386,linux/amd64,linux/arm/v6,linux/arm/v7,linux/arm64,linux/ppc64le,linux/riscv64,linux/s390x but HA only supports linux/amd64 and linux/arm64 so we only build those
+buildah bud --jobs=4 --platform=linux/amd64,linux/arm64 --manifest ha-ddns-updater:$TAG --layers --format docker -f Dockerfile -t docker.io/haddnsupdater/ha-ddns-updater:$TAG .
 buildah manifest push --all ha-ddns-updater:$TAG docker://docker.io/haddnsupdater/ha-ddns-updater:$TAG
 ```
