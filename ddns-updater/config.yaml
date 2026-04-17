@@ -1,0 +1,42 @@
+name: DDNS Updater
+version: "1.0.0"
+slug: ddns_updater
+description: Universal DNS updater with support for multiple DNS providers utilizing ddns-updater.
+arch:
+  - aarch64
+  - amd64
+  - armv7
+url: "https://gitlab.com/ha-ddns-updater/ha-ddns-updater"
+startup: application
+webui: "http://[HOST]:[PORT:8000]/"
+boot: auto
+ports:
+  "8000/tcp": 8000
+ports_description:
+  "8000/tcp": "Web UI for monitoring and management"
+# map: TODO to simplify things
+# envrionment: TODO
+legacy: true # TODO: necessary? false needs some image labels
+options:
+  period: "5m"
+  server_enabled: true
+  log_level: "info"
+  settings:
+    - provider: "duckdns"
+      domain: "example.duckdns.org"
+      token: "00000000-0000-0000-0000-000000000000"
+    - provider: "cloudflare"
+      domain: "example.com"
+      owner: "subdomain"
+      email: "user@example.com"
+      key: "your-api-key"
+schema:
+  period: str?
+  server_enabled: bool?
+  log_level: list(debug|info|warn|error)?
+  settings:
+    - map
+image: "docker.io/ha-ddns-updater/ha-ddns-updater"
+# ingress: # TODO: might be useful for webui
+init: false
+#watchdog: # TODO
