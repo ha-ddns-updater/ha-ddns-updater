@@ -9,9 +9,10 @@ Configuration is done via the Home Assistant UI. The addon expects settings in t
 ### Example Configuration
 
 ```yaml
-period: "5m"
-server_enabled: true
-log_level: "info"
+environments:
+  PERIOD: "5m"
+  SERVER_ENABLED: "yes"
+  LOG_LEVEL: "info"
 settings:
   - provider: "duckdns"
     domain: "example.duckdns.org"
@@ -25,13 +26,9 @@ settings:
 
 ### Configuration Options
 
-- **period**: Time between update checks (default: `5m`)
-    - Examples: `30s`, `5m`, `1h`
-
-- **server_enabled**: Enable the HTTP web UI on port 8000 (default: `true`)
-
-- **log_level**: Logging level (default: `info`)
-    - Options: `debug`, `info`, `warn`, `error`
+- **environments**: Map of environment variables passed directly to `ddns-updater`
+    - Examples: `PERIOD`, `SERVER_ENABLED`, `LOG_LEVEL`, `HTTP_TIMEOUT`, `TZ`
+    - Values are converted to strings before being passed to the process
 
 - **settings**: Array of DNS provider configurations
     - Each entry is a provider-specific object

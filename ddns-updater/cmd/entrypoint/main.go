@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"sort"
+	"strings"
 	"syscall"
 )
 
@@ -17,10 +19,8 @@ func main() {
 
 	// Parse options
 	var options struct {
-		Settings      []map[string]interface{} `json:"settings"`
-		Period        string                   `json:"period"`
-		ServerEnabled bool                     `json:"server_enabled"`
-		LogLevel      string                   `json:"log_level"`
+		Settings     []map[string]interface{} `json:"settings"`
+		Environments map[string]interface{}   `json:"environments"`
 	}
 
 	if err := json.Unmarshal(optionsData, &options); err != nil {
@@ -46,32 +46,60 @@ func main() {
 	log.Printf("Config written to /updater/data/config.json")
 	log.Printf("Settings: %d provider(s) configured", len(options.Settings))
 
-	// Set up environment variables for qdm12
-	env := os.Environ()
-
-	// Set PERIOD from options
-	if options.Period != "" {
-		env = append(env, fmt.Sprintf("PERIOD=%s", options.Period))
+	// Merge all environment overrides from options and ensure config filepath points
+	// to the generated file.
+	env, err := mergedEnvironment(os.Environ(), options.Environments)
+	if err != nil {
+		log.Fatalf("Failed to build environment: %v", err)
 	}
-
-	// Set SERVER_ENABLED from options
-	if options.ServerEnabled {
-		env = append(env, "SERVER_ENABLED=yes")
-	} else {
-		env = append(env, "SERVER_ENABLED=no")
-	}
-
-	// Set LOG_LEVEL from options
-	if options.LogLevel != "" {
-		env = append(env, fmt.Sprintf("LOG_LEVEL=%s", options.LogLevel))
-	}
-
-	// Ensure CONFIG_FILEPATH points to our config
-	env = append(env, "CONFIG_FILEPATH=/updater/data/config.json")
+	env = setEnv(env, "CONFIG_FILEPATH", "/updater/data/config.json")
 
 	// Replace this process with ddns-updater using syscall.Exec
 	err = syscall.Exec("/updater/ddns-updater", []string{"ddns-updater"}, env)
 	if err != nil {
 		log.Fatalf("Failed to exec ddns-updater: %v", err)
 	}
+}
+
+func mergedEnvironment(base []string, overrides map[string]interface{}) ([]string, error) {
+	envMap := make(map[string]string, len(base)+len(overrides))
+
+	for _, pair := range base {
+		key, value, found := strings.Cut(pair, "=")
+		if !found || key == "" {
+			continue
+		}
+		envMap[key] = value
+	}
+
+	for key, value := range overrides {
+		if key == "" || strings.Contains(key, "=") {
+			return nil, fmt.Errorf("invalid environment key %q", key)
+		}
+		envMap[key] = fmt.Sprint(value)
+	}
+
+	keys := make([]string, 0, len(envMap))
+	for key := range envMap {
+		keys = append(keys, key)
+	}
+	sort.Strings(keys)
+
+	result := make([]string, 0, len(keys))
+	for _, key := range keys {
+		result = append(result, key+"="+envMap[key])
+	}
+
+	return result, nil
+}
+
+func setEnv(env []string, key, value string) []string {
+	prefix := key + "="
+	for i, pair := range env {
+		if strings.HasPrefix(pair, prefix) {
+			env[i] = prefix + value
+			return env
+		}
+	}
+	return append(env, prefix+value)
 }

@@ -14,12 +14,13 @@ ports:
 ports_description:
   "8000/tcp": "Web UI for monitoring and management"
 # map: TODO to simplify things
-# envrionment: TODO
+# environment: TODO
 legacy: true # TODO: necessary? false needs some image labels
 options:
-  period: "5m"
-  server_enabled: true
-  log_level: "info"
+  environments:
+    PERIOD: "5m"
+    SERVER_ENABLED: "yes"
+    LOG_LEVEL: "info"
   settings:
     - provider: "duckdns"
       domain: "example.duckdns.org"
@@ -29,12 +30,7 @@ options:
       owner: "subdomain"
       email: "user@example.com"
       key: "your-api-key"
-schema:
-  period: str?
-  server_enabled: bool?
-  log_level: list(debug|info|warn|error)?
-  settings:
-    - map
+schema: false
 image: "docker.io/ha-ddns-updater/ha-ddns-updater"
 # ingress: # TODO: might be useful for webui
 init: false
