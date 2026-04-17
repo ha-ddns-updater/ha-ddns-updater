@@ -66,6 +66,7 @@ jobs:
       - name: Publish multi-arch manifest to GitHub Container Registry
         uses: home-assistant/builder/actions/publish-multi-arch-manifest@2026.03.2
         with:
+          cosign: false
           architectures: ${{ env.ARCHITECTURES }}
           container-registry-password: ${{ secrets.GITHUB_TOKEN }}
           image-name: ${{ env.IMAGE_NAME }}
@@ -88,7 +89,10 @@ jobs:
       - name: Publish multi-arch manifest to Docker Hub
         uses: home-assistant/builder/actions/publish-multi-arch-manifest@2026.03.2
         with:
+          cosign: false
           architectures: ${{ env.ARCHITECTURES }}
+          container-registry: docker.io
+          registry-prefix: 'docker.io/haddnsupdater'
           container-registry-username: ${{ secrets.DOCKERHUB_USERNAME }}
           container-registry-password: ${{ secrets.DOCKERHUB_TOKEN }}
           image-name: ${{ env.IMAGE_NAME }}
