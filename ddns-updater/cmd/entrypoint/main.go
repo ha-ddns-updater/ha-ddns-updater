@@ -10,11 +10,15 @@ import (
 	"syscall"
 )
 
+const defaultHAOptionsFilepath = "/data/options.json"
+
 func main() {
-	// Read Home Assistant options from /data/options.json
-	optionsData, err := os.ReadFile("/data/options.json")
+	optionsFilepath := envOrDefault("HA_OPTIONS_FILEPATH", defaultHAOptionsFilepath)
+
+	// Read Home Assistant options from the configured filepath.
+	optionsData, err := os.ReadFile(optionsFilepath)
 	if err != nil {
-		log.Fatalf("Failed to read options.json: %v", err)
+		log.Fatalf("Failed to read options file %q: %v", optionsFilepath, err)
 	}
 
 	// Parse options
@@ -59,6 +63,14 @@ func main() {
 	if err != nil {
 		log.Fatalf("Failed to exec ddns-updater: %v", err)
 	}
+}
+
+func envOrDefault(key, fallback string) string {
+	value := os.Getenv(key)
+	if value == "" {
+		return fallback
+	}
+	return value
 }
 
 func mergedEnvironment(base []string, overrides map[string]interface{}) ([]string, error) {

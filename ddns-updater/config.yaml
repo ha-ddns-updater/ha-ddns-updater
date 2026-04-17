@@ -13,8 +13,11 @@ ports:
   "8000/tcp": 8000
 ports_description:
   "8000/tcp": "Web UI for monitoring and management"
-# map: TODO to simplify things
-# environment: TODO
+map:
+  - type: data
+    path: "/updater/data"
+environment:
+  HA_OPTIONS_FILEPATH: "/updater/data/options.json"
 legacy: true # TODO: necessary? false needs some image labels
 options:
   environments:
