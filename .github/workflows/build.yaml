@@ -6,7 +6,7 @@ on:
 
 env:
   ARCHITECTURES: '["amd64", "aarch64"]'
-  IMAGE_NAME: my-image
+  IMAGE_NAME: ha-ddns-updater
 
 permissions:
   contents: read
@@ -79,6 +79,12 @@ jobs:
     permissions:
       id-token: write # Write needed for Cosign signing (issue OIDC token for signing)
     steps:
+      - name: Log in to ghcr.io
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
       - name: Publish multi-arch manifest to Docker Hub
         uses: home-assistant/builder/actions/publish-multi-arch-manifest@2026.03.2
         with:
