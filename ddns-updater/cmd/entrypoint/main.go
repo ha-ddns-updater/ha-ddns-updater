@@ -10,7 +10,7 @@ import (
 	"syscall"
 )
 
-const defaultHAOptionsFilepath = "/data/options.json"
+const defaultHAOptionsFilepath = "/updater/data/options.json"
 
 func main() {
 	optionsFilepath := envOrDefault("HA_OPTIONS_FILEPATH", defaultHAOptionsFilepath)
@@ -23,40 +23,22 @@ func main() {
 
 	// Parse options
 	var options struct {
-		Settings     []map[string]interface{} `json:"settings"`
-		Environments map[string]interface{}   `json:"environments"`
+		Environments map[string]interface{} `json:"environments"`
 	}
 
 	if err := json.Unmarshal(optionsData, &options); err != nil {
 		log.Fatalf("Failed to parse options.json: %v", err)
 	}
 
-	// Build config for qdm12
-	config := map[string]interface{}{
-		"settings": options.Settings,
-	}
-
-	configJSON, err := json.MarshalIndent(config, "", "  ")
-	if err != nil {
-		log.Fatalf("Failed to marshal config: %v", err)
-	}
-
-	// Write config to qdm12's expected location
-	err = os.WriteFile("/updater/data/config.json", configJSON, 0o644)
-	if err != nil {
-		log.Fatalf("Failed to write config.json: %v", err)
-	}
-
-	log.Printf("Config written to /updater/data/config.json")
-	log.Printf("Settings: %d provider(s) configured", len(options.Settings))
+	log.Printf("Using options file as ddns-updater config: %s", optionsFilepath)
 
 	// Merge all environment overrides from options and ensure config filepath points
-	// to the generated file.
+	// to the mapped Home Assistant options file.
 	env, err := mergedEnvironment(os.Environ(), options.Environments)
 	if err != nil {
 		log.Fatalf("Failed to build environment: %v", err)
 	}
-	env = setEnv(env, "CONFIG_FILEPATH", "/updater/data/config.json")
+	env = setEnv(env, "CONFIG_FILEPATH", optionsFilepath)
 
 	// Replace this process with ddns-updater using syscall.Exec
 	err = syscall.Exec("/updater/ddns-updater", []string{"ddns-updater"}, env)
