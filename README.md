@@ -4,12 +4,12 @@ A Home Assistant addon that wraps [qdm12/ddns-updater](https://github.com/qdm12/
 
 ## Installation
 
-[![Open your Home Assistant instance and show the app store with a specific repository URL pre-filled.](https://my.home-assistant.io/badges/supervisor_store.svg)](https://my.home-assistant.io/redirect/supervisor_store/?repository_url=https%3A%2F%2Fgitlab.com%2Fha-ddns-updater%2Fha-ddns-updater)
+[![Open your Home Assistant instance and show the app store with a specific repository URL pre-filled.](https://my.home-assistant.io/badges/supervisor_store.svg)](https://my.home-assistant.io/redirect/supervisor_store/?repository_url=https%3A%2F%2Fgithub.com%2Fha-ddns-updater%2Fha-ddns-updater)
 
 ### manually
 1. Add this repository to Home Assistant:
    - Settings → Add-ons → Create add-on repository
-   - URL: `https://gitlab.com/ha-ddns-updater/ha-ddns-updater`
+   - URL: `https://github.com/ha-ddns-updater/ha-ddns-updater`
 
 2. Install the addon:
    - Settings → Add-ons → DDNS Updater

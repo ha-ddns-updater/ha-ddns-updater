@@ -53,7 +53,7 @@ The upstream project [qdm12/ddns-updater](https://github.com/qdm12/ddns-updater)
 
 For issues or questions:
 - Check [qdm12/ddns-updater documentation](https://github.com/qdm12/ddns-updater)
-- Open an issue on [GitLab](https://gitlab.com/ha-ddns-updater/ha-ddns-updater)
+- Open an issue on [GitHub](https://github.com/ha-ddns-updater/ha-ddns-updater)
 
 ## Build
 

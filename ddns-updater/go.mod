@@ -1,3 +1,3 @@
-module gitlab.com/ha-ddns-updater/ha-ddns-updater
+module github.com/ha-ddns-updater/ha-ddns-updater
 
 go 1.25
