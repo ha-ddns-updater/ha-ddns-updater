@@ -54,13 +54,33 @@ async function fetchLatestUpstreamPatchVersion() {
   return [...versions].sort(compareVersionsDesc)[0];
 }
 
-function readCurrentDockerfileVersion() {
+function readCurrentUpstreamVersionFromDockerfile() {
   const dockerfile = readFileSync(DOCKERFILE_PATH, "utf8");
   const match = dockerfile.match(/^FROM docker\.io\/qmcgaw\/ddns-updater:(.+)$/m);
   if (!match) {
     throw new Error(`Could not find upstream FROM line in ${DOCKERFILE_PATH}`);
   }
   return match[1].trim();
+}
+
+function readCurrentAddonVersionFromConfig() {
+  const config = readFileSync(CONFIG_PATH, "utf8");
+  const match = config.match(/^version:\s*"(.+)"$/m);
+  if (!match) {
+    throw new Error(`Could not find version field in ${CONFIG_PATH}`);
+  }
+  return match[1].trim();
+}
+
+function extractAddonVersion(fullVersion) {
+  // Parse addon version from format like "2.9.0-ha1.0.0"
+  // Returns the addon semver part (e.g., "1.0.0")
+  // If no addon version (just "2.9.0"), return "1.0.0" as default
+  const match = fullVersion.match(/^.*-ha(.+)$/);
+  if (!match) {
+    return "1.0.0"; // Default addon version when config is created
+  }
+  return match[1];
 }
 
 function writeOutputs(outputs) {
@@ -86,11 +106,11 @@ function updateDockerfile(newVersion) {
   writeFileSync(DOCKERFILE_PATH, updatedDockerfile);
 }
 
-function updateConfigYaml(newVersion) {
+function updateConfigYaml(newUpstreamVersion, addonVersion) {
   const config = readFileSync(CONFIG_PATH, "utf8");
   const updatedConfig = config.replace(
     /^version:\s*".*"$/m,
-    `version: "${newVersion}-ha1"`,
+    `version: "${newUpstreamVersion}-ha${addonVersion}"`,
   );
 
   if (updatedConfig === config) {
@@ -104,25 +124,28 @@ async function main() {
   const writeChanges = process.argv.includes("--write");
 
   const upstreamVersion = await fetchLatestUpstreamPatchVersion();
-  const currentVersion = readCurrentDockerfileVersion();
-  const updateNeeded = upstreamVersion !== currentVersion;
+  const currentUpstreamVersion = readCurrentUpstreamVersionFromDockerfile();
+  const currentFullConfigVersion = readCurrentAddonVersionFromConfig();
+  const addonVersion = extractAddonVersion(currentFullConfigVersion);
+
+  const updateNeeded = upstreamVersion !== currentUpstreamVersion;
 
   writeOutputs({
     upstream_version: upstreamVersion,
-    current_version: currentVersion,
+    current_version: currentUpstreamVersion,
     update_needed: String(updateNeeded),
   });
 
   if (!updateNeeded) {
-    console.log(`Already up-to-date at ${currentVersion}`);
+    console.log(`Already up-to-date at ${currentUpstreamVersion} (addon: ${addonVersion})`);
     return;
   }
 
-  console.log(`New upstream version found: ${currentVersion} -> ${upstreamVersion}`);
+  console.log(`New upstream version found: ${currentUpstreamVersion} -> ${upstreamVersion} (addon: ${addonVersion})`);
 
   if (writeChanges) {
     updateDockerfile(upstreamVersion);
-    updateConfigYaml(upstreamVersion);
+    updateConfigYaml(upstreamVersion, addonVersion);
     console.log(`Updated ${DOCKERFILE_PATH} and ${CONFIG_PATH}`);
   }
 }
