@@ -3,6 +3,7 @@
 import { readFileSync, writeFileSync } from "node:fs";
 
 const CONFIG_PATH = "ddns-updater/config.yaml";
+const CHANGELOG_PATH = "ddns-updater/CHANGELOG.md";
 
 function parseVersion(configContent) {
   const match = configContent.match(/^version:\s*"(\d+\.\d+\.\d+)-ha(\d+\.\d+\.\d+)"$/m);
@@ -58,14 +59,44 @@ function updateConfigVersion(nextAddonVersion) {
   console.log(`Updated ${CONFIG_PATH}: ${current.upstream}-ha${current.addon} -> ${nextFullVersion}`);
 }
 
+function patchChangelog(addonOnlyVersion, fullGitTag) {
+  let changelog;
+  try {
+    changelog = readFileSync(CHANGELOG_PATH, "utf8");
+  } catch {
+    // Changelog may not exist on first run; nothing to patch.
+    return;
+  }
+
+  // Replace the section header that uses the addon-only version with the full tag.
+  // Targets lines like: ## [1.0.5](...) or # [1.0.5](...)
+  const escaped = addonOnlyVersion.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  const patched = changelog.replace(
+    new RegExp(`(#{1,3} \\[?)${escaped}(\\])`, "g"),
+    `$1${fullGitTag}$2`,
+  );
+
+  if (patched !== changelog) {
+    writeFileSync(CHANGELOG_PATH, patched);
+    console.log(`Patched ${CHANGELOG_PATH}: replaced ${addonOnlyVersion} → ${fullGitTag} in headers`);
+  }
+}
+
 function main() {
   const requestedVersion = process.argv[2];
   if (!requestedVersion) {
-    throw new Error("Usage: node .github/scripts/prepare-addon-release.mjs <addon-version|full-version>");
+    throw new Error(
+      "Usage: node .github/scripts/prepare-addon-release.mjs <addon-version|full-version> [git-tag]",
+    );
   }
 
+  const fullGitTag = process.argv[3] ?? null;
   const nextAddonVersion = normalizeAddonVersion(requestedVersion);
   updateConfigVersion(nextAddonVersion);
+
+  if (fullGitTag) {
+    patchChangelog(nextAddonVersion, fullGitTag);
+  }
 }
 
 main();

@@ -1,6 +1,10 @@
 module.exports = {
   branches: ["main"],
-  tagFormat: "${version}",
+  // tagFormat encodes the upstream image version as a prefix so the full tag
+  // is e.g. "2.9.0-ha1.0.5". The ${version} placeholder is the addon semver
+  // only (e.g. "1.0.5") and is what semantic-release uses for bumping logic.
+  // Keep this prefix in sync with the FROM line in ddns-updater/Dockerfile.
+  tagFormat: "2.9.0-ha${version}",
   plugins: [
     [
       "@semantic-release/commit-analyzer",
@@ -8,7 +12,6 @@ module.exports = {
         preset: "conventionalcommits",
       },
     ],
-    "./.github/scripts/semantic-release-full-version.cjs",
     [
       "@semantic-release/release-notes-generator",
       {
@@ -24,7 +27,10 @@ module.exports = {
     [
       "@semantic-release/exec",
       {
-        prepareCmd: "node .github/scripts/prepare-addon-release.mjs ${nextRelease.version}",
+        // Receives addon-only version (e.g. "1.0.5") and full gitTag (e.g. "2.9.0-ha1.0.5").
+        // Updates config.yaml and patches the CHANGELOG.md header to show the full version.
+        prepareCmd:
+          "node .github/scripts/prepare-addon-release.mjs ${nextRelease.version} ${nextRelease.gitTag}",
       },
     ],
     [

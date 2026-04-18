@@ -5,6 +5,7 @@ import { readFileSync, writeFileSync, appendFileSync } from "node:fs";
 const TAGS_URL = "https://hub.docker.com/v2/repositories/qmcgaw/ddns-updater/tags?page_size=100";
 const DOCKERFILE_PATH = "ddns-updater/Dockerfile";
 const CONFIG_PATH = "ddns-updater/config.yaml";
+const RELEASERC_PATH = ".releaserc.cjs";
 
 function semverKey(version) {
   return version.split(".").map((part) => Number(part));
@@ -120,6 +121,20 @@ function updateConfigYaml(newUpstreamVersion, addonVersion) {
   writeFileSync(CONFIG_PATH, updatedConfig);
 }
 
+function updateReleaserc(newUpstreamVersion) {
+  const releaserc = readFileSync(RELEASERC_PATH, "utf8");
+  const updatedReleaserc = releaserc.replace(
+    /tagFormat:\s*"[^"]*-ha\$\{version\}"/,
+    `tagFormat: "${newUpstreamVersion}-ha\${version}"`,
+  );
+
+  if (updatedReleaserc === releaserc) {
+    throw new Error(`Failed to update tagFormat in ${RELEASERC_PATH}`);
+  }
+
+  writeFileSync(RELEASERC_PATH, updatedReleaserc);
+}
+
 async function main() {
   const writeChanges = process.argv.includes("--write");
 
@@ -146,7 +161,8 @@ async function main() {
   if (writeChanges) {
     updateDockerfile(upstreamVersion);
     updateConfigYaml(upstreamVersion, addonVersion);
-    console.log(`Updated ${DOCKERFILE_PATH} and ${CONFIG_PATH}`);
+    updateReleaserc(upstreamVersion);
+    console.log(`Updated ${DOCKERFILE_PATH}, ${CONFIG_PATH}, and ${RELEASERC_PATH}`);
   }
 }
 
