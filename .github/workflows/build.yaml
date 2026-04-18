@@ -111,3 +111,21 @@ jobs:
           # Copy manifest with all tags
           skopeo copy --all ${GHCR_SOURCE}:${{ github.event.release.tag_name }} docker://${DOCKERHUB_DEST}:${{ github.event.release.tag_name }}
           skopeo copy --all ${GHCR_SOURCE}:latest docker://${DOCKERHUB_DEST}:latest
+
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Update Docker Hub description
+        env:
+          DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+          DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+          DOCKERHUB_IMAGE: ${{ env.DOCKERHUB_IMAGE }}
+        run: |
+          TOKEN=$(curl -s -X POST -H 'Content-Type: application/json' \
+            --data '{"username":"'"${DOCKERHUB_USERNAME}"'","password":"'"${DOCKERHUB_TOKEN}"'"}' \
+            https://hub.docker.com/v2/users/login | jq -r '.token')
+          curl -s -X PATCH \
+            -H 'Content-Type: application/json' \
+            -H "Authorization: Bearer ${TOKEN}" \
+            --data '{"full_description":'"$(jq -R -s '.' < README.md)"'}' \
+            https://hub.docker.com/v2/repositories/${DOCKERHUB_IMAGE#docker.io/}
