@@ -123,8 +123,8 @@ jobs:
           chmod 600 ~/.config/containers/auth.json
 
           # Copy manifest with all tags
-          skopeo copy --all ${GHCR_SOURCE}:${{ needs.init.outputs.release_version }} docker://${DOCKERHUB_DEST}:${{ needs.init.outputs.release_version }}
-          skopeo copy --all ${GHCR_SOURCE}:latest docker://${DOCKERHUB_DEST}:latest
+          skopeo copy --all docker://${GHCR_SOURCE}:${{ needs.init.outputs.release_version }} docker://${DOCKERHUB_DEST}:${{ needs.init.outputs.release_version }}
+          skopeo copy --all docker://${GHCR_SOURCE}:latest docker://${DOCKERHUB_DEST}:latest
 
       - name: Checkout repository
         uses: actions/checkout@v6
