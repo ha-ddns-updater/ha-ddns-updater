@@ -22,6 +22,15 @@ function validateAddonVersion(version) {
   }
 }
 
+function normalizeAddonVersion(inputVersion) {
+  const fullVersionMatch = /^(\d+\.\d+\.\d+)-ha(\d+\.\d+\.\d+)$/.exec(inputVersion);
+  if (fullVersionMatch) {
+    return fullVersionMatch[2];
+  }
+
+  return inputVersion;
+}
+
 function updateConfigVersion(nextAddonVersion) {
   validateAddonVersion(nextAddonVersion);
 
@@ -50,11 +59,12 @@ function updateConfigVersion(nextAddonVersion) {
 }
 
 function main() {
-  const nextAddonVersion = process.argv[2];
-  if (!nextAddonVersion) {
-    throw new Error("Usage: node .github/scripts/prepare-addon-release.mjs <addon-version>");
+  const requestedVersion = process.argv[2];
+  if (!requestedVersion) {
+    throw new Error("Usage: node .github/scripts/prepare-addon-release.mjs <addon-version|full-version>");
   }
 
+  const nextAddonVersion = normalizeAddonVersion(requestedVersion);
   updateConfigVersion(nextAddonVersion);
 }
 

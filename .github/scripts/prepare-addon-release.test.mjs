@@ -52,6 +52,23 @@ test("succeeds without changes when addon semver already matches", () => {
   }
 });
 
+test("accepts full version input and applies only addon semver", () => {
+  const { fixtureDir, configPath } = setupFixture("2.9.0-ha1.0.4");
+
+  try {
+    execFileSync("node", [SCRIPT_PATH.pathname, "2.9.0-ha1.1.0"], {
+      cwd: fixtureDir,
+      env: process.env,
+      stdio: "pipe",
+    });
+
+    const updated = readFileSync(configPath, "utf8");
+    assert.match(updated, /version: "2\.9\.0-ha1\.1\.0"/);
+  } finally {
+    rmSync(fixtureDir, { recursive: true, force: true });
+  }
+});
+
 test("fails on invalid addon semver", () => {
   const { fixtureDir } = setupFixture("2.9.0-ha1.0.4");
 
