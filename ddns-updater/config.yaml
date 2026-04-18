@@ -34,7 +34,7 @@ options:
       email: "user@example.com"
       key: "your-api-key"
 schema: false
-image: "docker.io/ha-ddns-updater/ha-ddns-updater"
+image: "docker.io/haddnsupdater/ha-ddns-updater"
 # ingress: # TODO: might be useful for webui
 init: false
 #watchdog: # TODO
