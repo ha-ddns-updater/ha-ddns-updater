@@ -1,3 +1,10 @@
+## [2.9.0-ha1.0.1](https://github.com/ha-ddns-updater/ha-ddns-updater/compare/2.9.0-ha1.0.0...2.9.0-ha1.0.1) (2026-04-18)
+
+### Bug Fixes
+
+* correct changelog generation ([c48b73d](https://github.com/ha-ddns-updater/ha-ddns-updater/commit/c48b73db1fd48efe56e378bf315fbfa5de182df8))
+* run build on tags instead of release to match with semrel-bot ([3654b69](https://github.com/ha-ddns-updater/ha-ddns-updater/commit/3654b691bd2a97b68bfcc1e30f3768f545d3ba12))
+
 ## 1.0.0 (2026-04-18)
 
 ### Features
