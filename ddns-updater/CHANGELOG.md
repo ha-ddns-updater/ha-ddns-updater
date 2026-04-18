@@ -1,3 +1,9 @@
+## [2.9.0-ha1.0.3](https://github.com/ha-ddns-updater/ha-ddns-updater/compare/2.9.0-ha1.0.2...2.9.0-ha1.0.3) (2026-04-18)
+
+### Bug Fixes
+
+* skopeo command to copy to docker.io ([bd1f275](https://github.com/ha-ddns-updater/ha-ddns-updater/commit/bd1f275b852bf14216443ff774202a6a52f53ff3))
+
 ## [2.9.0-ha1.0.2](https://github.com/ha-ddns-updater/ha-ddns-updater/compare/2.9.0-ha1.0.1...2.9.0-ha1.0.2) (2026-04-18)
 
 ### Bug Fixes
