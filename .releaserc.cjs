@@ -16,6 +16,17 @@ module.exports = {
       "@semantic-release/release-notes-generator",
       {
         preset: "conventionalcommits",
+        writerOpts: {
+          // Replace the addon-only semver (e.g. "1.0.6") with the full git tag
+          // (e.g. "2.9.0-ha1.0.6") in all generated notes so both the CHANGELOG
+          // file and the GitHub Release body show the full version.
+          finalizeContext(ctx) {
+            if (ctx.currentTag) {
+              ctx.version = ctx.currentTag;
+            }
+            return ctx;
+          },
+        },
       },
     ],
     [
@@ -27,10 +38,8 @@ module.exports = {
     [
       "@semantic-release/exec",
       {
-        // Receives addon-only version (e.g. "1.0.5") and full gitTag (e.g. "2.9.0-ha1.0.5").
-        // Updates config.yaml and patches the CHANGELOG.md header to show the full version.
         prepareCmd:
-          "node .github/scripts/prepare-addon-release.mjs ${nextRelease.version} ${nextRelease.gitTag}",
+          "node .github/scripts/prepare-addon-release.mjs ${nextRelease.version}",
       },
     ],
     [
