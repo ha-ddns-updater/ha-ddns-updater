@@ -1,6 +1,7 @@
 name: Build
 
 on:
+  workflow_dispatch: {}
   push:
     tags:
       # Matches full addon version tags like "2.9.0-ha1.0.6"
