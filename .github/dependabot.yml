@@ -4,7 +4,22 @@ updates:
     directory: "/.github"
     schedule:
       interval: "weekly"
+    commit-message:
+      prefix: "chore(ci)"
   - package-ecosystem: "gomod"
     directory: "/ddns-updater"
     schedule:
       interval: "weekly"
+    commit-message:
+      prefix: "chore(deps)"
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    commit-message:
+      prefix: "chore(ci)"
+    groups:
+      semantic-release:
+        patterns:
+          - "semantic-release"
+          - "@semantic-release/*"
