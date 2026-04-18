@@ -1,3 +1,9 @@
+## [2.9.0-ha1.0.2](https://github.com/ha-ddns-updater/ha-ddns-updater/compare/2.9.0-ha1.0.1...2.9.0-ha1.0.2) (2026-04-18)
+
+### Bug Fixes
+
+* trigger build when releasing ([2374111](https://github.com/ha-ddns-updater/ha-ddns-updater/commit/2374111da6ba0a5b851ed4a816021008607a9c85))
+
 ## [2.9.0-ha1.0.1](https://github.com/ha-ddns-updater/ha-ddns-updater/compare/2.9.0-ha1.0.0...2.9.0-ha1.0.1) (2026-04-18)
 
 ### Bug Fixes
