@@ -7,6 +7,7 @@ on:
 env:
   ARCHITECTURES: '["amd64", "aarch64"]'
   IMAGE_NAME: ha-ddns-updater
+  DOCKERHUB_IMAGE: docker.io/haddnsupdater/ha-ddns-updater
 
 permissions:
   contents: read
@@ -55,7 +56,7 @@ jobs:
           push: "true"
           version: ${{ github.event.release.tag_name }}
 
-  manifest-ghcr:
+  manifest:
     name: Publish multi-arch manifest
     needs: [init, build]
     runs-on: ubuntu-latest
@@ -73,29 +74,40 @@ jobs:
           image-tags: |
             ${{ github.event.release.tag_name }}
             latest
-  manifest-dockerhub:
-    name: Publish multi-arch manifest to Docker Hub
-    needs: [init, build]
+
+  copy-to-dockerhub:
+    name: Copy multi-arch manifest to Docker Hub
+    needs: manifest
     runs-on: ubuntu-latest
-    permissions:
-      id-token: write # Write needed for Cosign signing (issue OIDC token for signing)
     steps:
-      - name: Log in to ghcr.io
-        uses: docker/login-action@v2
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-      - name: Publish multi-arch manifest to Docker Hub
-        uses: home-assistant/builder/actions/publish-multi-arch-manifest@2026.03.2
-        with:
-          cosign: false
-          architectures: ${{ env.ARCHITECTURES }}
-          container-registry: docker.io
-          registry-prefix: 'docker.io/haddnsupdater'
-          container-registry-username: ${{ secrets.DOCKERHUB_USERNAME }}
-          container-registry-password: ${{ secrets.DOCKERHUB_TOKEN }}
-          image-name: ${{ env.IMAGE_NAME }}
-          image-tags: |
-            ${{ github.event.release.tag_name }}
-            latest
+      - name: Install skopeo
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y skopeo
+
+      - name: Copy images to Docker Hub
+        env:
+          GHCR_SOURCE: ghcr.io/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}
+          DOCKERHUB_DEST: ${{ env.DOCKERHUB_IMAGE }}
+          DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+          DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+        run: |
+          # Create skopeo auth files
+          mkdir -p ~/.config/containers
+          cat > ~/.config/containers/auth.json <<EOF
+          {
+            "auths": {
+              "ghcr.io": {
+                "auth": "$(echo -n '${{ github.repository_owner }}:${{ secrets.GITHUB_TOKEN }}' | base64 -w0)"
+              },
+              "docker.io": {
+                "auth": "$(echo -n '${DOCKERHUB_USERNAME}:${DOCKERHUB_TOKEN}' | base64 -w0)"
+              }
+            }
+          }
+          EOF
+          chmod 600 ~/.config/containers/auth.json
+
+          # Copy manifest with all tags
+          skopeo copy --all ${GHCR_SOURCE}:${{ github.event.release.tag_name }} docker://${DOCKERHUB_DEST}:${{ github.event.release.tag_name }}
+          skopeo copy --all ${GHCR_SOURCE}:latest docker://${DOCKERHUB_DEST}:latest
