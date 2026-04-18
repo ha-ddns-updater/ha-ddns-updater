@@ -31,10 +31,10 @@ jobs:
         uses: peter-evans/create-pull-request@v7
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          commit-message: "chore: bump upstream ddns-updater to ${{ steps.detect.outputs.upstream_version }}"
-          branch: "chore/upstream-ddns-updater-${{ steps.detect.outputs.upstream_version }}"
+          commit-message: "feat: bump upstream ddns-updater to ${{ steps.detect.outputs.upstream_version }}"
+          branch: "feature/upstream-ddns-updater-${{ steps.detect.outputs.upstream_version }}"
           delete-branch: true
-          title: "chore: bump upstream ddns-updater to ${{ steps.detect.outputs.upstream_version }}"
+          title: "feat: bump upstream ddns-updater to ${{ steps.detect.outputs.upstream_version }}"
           body: |
             This PR updates the wrapped upstream image version.
 
