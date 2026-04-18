@@ -27,6 +27,12 @@ function updateConfigVersion(nextAddonVersion) {
 
   const config = readFileSync(CONFIG_PATH, "utf8");
   const current = parseVersion(config);
+
+  if (current.addon === nextAddonVersion) {
+    console.log(`No update needed for ${CONFIG_PATH}: already at ${current.upstream}-ha${current.addon}`);
+    return;
+  }
+
   const nextFullVersion = `${current.upstream}-ha${nextAddonVersion}`;
 
   const updatedConfig = config.replace(
