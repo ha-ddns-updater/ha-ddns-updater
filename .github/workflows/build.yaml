@@ -93,6 +93,9 @@ jobs:
     name: Copy multi-arch manifest to Docker Hub
     needs: [init, manifest]
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: read
     steps:
       - name: Install skopeo
         run: |
