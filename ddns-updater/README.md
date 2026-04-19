@@ -29,6 +29,7 @@ settings:
 - **environments**: Map of environment variables passed directly to `ddns-updater`
     - Examples: `PERIOD`, `SERVER_ENABLED`, `LOG_LEVEL`, `HTTP_TIMEOUT`, `TZ`
     - Values are converted to strings before being passed to the process
+    - Setting `LOG_LEVEL` to `debug` also enables addon entrypoint diagnostics, including a listing of the options file directory and a raw dump of `options.json` before launching `ddns-updater`
 
 - **settings**: Array of DNS provider configurations
     - Each entry is a provider-specific object
@@ -42,7 +43,7 @@ This addon is built on top of [qdm12/ddns-updater](https://github.com/qdm12/ddns
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the MIT License - see the [LICENSE](../LICENSE) file for details.
 
 The upstream project [qdm12/ddns-updater](https://github.com/qdm12/ddns-updater) is also licensed under the MIT License - see their [LICENSE](https://github.com/qdm12/ddns-updater/blob/master/LICENSE) file.
 

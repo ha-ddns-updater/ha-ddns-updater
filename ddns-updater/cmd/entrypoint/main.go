@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"path/filepath"
 	"sort"
 	"strings"
 	"syscall"
@@ -30,6 +31,10 @@ func main() {
 		log.Fatalf("Failed to parse options.json: %v", err)
 	}
 
+	if isDebugLogLevel(options.Environments["LOG_LEVEL"]) {
+		logOptionsDiagnostics(optionsFilepath, optionsData)
+	}
+
 	log.Printf("Using options file as ddns-updater config: %s", optionsFilepath)
 
 	// Merge all environment overrides from options and ensure config filepath points
@@ -53,6 +58,45 @@ func envOrDefault(key, fallback string) string {
 		return fallback
 	}
 	return value
+}
+
+func isDebugLogLevel(value interface{}) bool {
+	if value == nil {
+		return false
+	}
+	return strings.EqualFold(strings.TrimSpace(fmt.Sprint(value)), "debug")
+}
+
+func logOptionsDiagnostics(optionsFilepath string, optionsData []byte) {
+	optionsDir := filepath.Dir(optionsFilepath)
+	log.Printf("DEBUG: listing options directory %q", optionsDir)
+
+	entries, err := os.ReadDir(optionsDir)
+	if err != nil {
+		log.Printf("DEBUG: failed to list options directory %q: %v", optionsDir, err)
+	} else {
+		for _, line := range formatDirEntries(entries) {
+			log.Printf("DEBUG: options dir entry: %s", line)
+		}
+	}
+
+	log.Printf("DEBUG: options file dump %q:\n%s", optionsFilepath, optionsData)
+}
+
+func formatDirEntries(entries []os.DirEntry) []string {
+	if len(entries) == 0 {
+		return []string{"<empty>"}
+	}
+
+	lines := make([]string, 0, len(entries))
+	for _, entry := range entries {
+		name := entry.Name()
+		if entry.IsDir() {
+			name += "/"
+		}
+		lines = append(lines, name)
+	}
+	return lines
 }
 
 func mergedEnvironment(base []string, overrides map[string]interface{}) ([]string, error) {
