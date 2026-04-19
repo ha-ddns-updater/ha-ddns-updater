@@ -1,3 +1,9 @@
+## [2.9.0-ha1.2.3](https://github.com/ha-ddns-updater/ha-ddns-updater/compare/2.9.0-ha1.2.2...2.9.0-ha1.2.3) (2026-04-19)
+
+### Bug Fixes
+
+* bring back disabled schema validation ([bfb5c5d](https://github.com/ha-ddns-updater/ha-ddns-updater/commit/bfb5c5d0bc27c91049730ae8a87cbfe8168b0776))
+
 ## [2.9.0-ha1.2.2](https://github.com/ha-ddns-updater/ha-ddns-updater/compare/2.9.0-ha1.2.1...2.9.0-ha1.2.2) (2026-04-19)
 
 ### Bug Fixes
