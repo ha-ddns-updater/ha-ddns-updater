@@ -1,3 +1,13 @@
+## [2.9.0-ha1.6.0](https://github.com/ha-ddns-updater/ha-ddns-updater/compare/2.9.0-ha1.5.1...2.9.0-ha1.6.0) (2026-04-19)
+
+### Features
+
+* Add HACS validator and json ([23b3502](https://github.com/ha-ddns-updater/ha-ddns-updater/commit/23b3502f736d654d27ba18403248f1abe65bff7d))
+
+### Bug Fixes
+
+* correct my-link to add repo ([59c8e6e](https://github.com/ha-ddns-updater/ha-ddns-updater/commit/59c8e6ebadcc1219bdb3a27c959538f517c54c36))
+
 ## [2.9.0-ha1.5.1](https://github.com/ha-ddns-updater/ha-ddns-updater/compare/2.9.0-ha1.5.0...2.9.0-ha1.5.1) (2026-04-19)
 
 ### Bug Fixes
