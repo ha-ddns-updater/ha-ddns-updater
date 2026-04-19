@@ -7,7 +7,6 @@ arch:
   - amd64
 url: "https://github.com/ha-ddns-updater/ha-ddns-updater"
 # startup: application
-watchdog: "http://[HOST]:9999/"
 ingress: true
 ingress_port: 8000
 # boot: auto

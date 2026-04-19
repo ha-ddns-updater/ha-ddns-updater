@@ -16,6 +16,8 @@ RUN go build -trimpath -ldflags="-s -w" -o entrypoint cmd/entrypoint/main.go
 # Final stage: extend the qdm12 image
 FROM docker.io/qmcgaw/ddns-updater:2.9.0
 
+HEALTHCHECK --interval=60s --timeout=5s --start-period=10s --retries=2 CMD ["/updater/ddns-updater", "healthcheck"]
+
 # Copy the Go entrypoint binary
 COPY --from=builder /build/entrypoint /entrypoint
 
