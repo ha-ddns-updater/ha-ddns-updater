@@ -1,3 +1,9 @@
+## [2.9.0-ha1.6.1](https://github.com/ha-ddns-updater/ha-ddns-updater/compare/2.9.0-ha1.6.0...2.9.0-ha1.6.1) (2026-04-19)
+
+### Bug Fixes
+
+* remove HACS again since it is not compatible with addons :( ([7d5f1e3](https://github.com/ha-ddns-updater/ha-ddns-updater/commit/7d5f1e3cf310b3b94e51dfe464283dbbefadf8a0))
+
 ## [2.9.0-ha1.6.0](https://github.com/ha-ddns-updater/ha-ddns-updater/compare/2.9.0-ha1.5.1...2.9.0-ha1.6.0) (2026-04-19)
 
 ### Features
