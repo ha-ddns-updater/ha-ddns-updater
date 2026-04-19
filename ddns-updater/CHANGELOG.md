@@ -1,3 +1,9 @@
+## [2.9.0-ha1.2.7](https://github.com/ha-ddns-updater/ha-ddns-updater/compare/2.9.0-ha1.2.6...2.9.0-ha1.2.7) (2026-04-19)
+
+### Bug Fixes
+
+* more settings ([e8dba82](https://github.com/ha-ddns-updater/ha-ddns-updater/commit/e8dba822915d25f4142da1012df43a0864c5ad4d))
+
 ## [2.9.0-ha1.2.6](https://github.com/ha-ddns-updater/ha-ddns-updater/compare/2.9.0-ha1.2.5...2.9.0-ha1.2.6) (2026-04-19)
 
 ### Bug Fixes
