@@ -25,3 +25,7 @@ Releases are automated with `semantic-release` on pushes to `main`.
 - The upstream part is preserved by release automation and only changed by the upstream bump workflow.
 - Upstream bump PRs use `feat:` commits so merging them triggers a minor add-on bump.
 - Release notes are written to `ddns-updater/CHANGELOG.md` by semantic-release.
+
+## Sponsor
+
+[![Buy me a coffee](https://cdn.buymeacoffee.com/buttons/default-yellow.png)](https://www.buymeacoffee.com/blaimi)
