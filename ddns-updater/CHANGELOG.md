@@ -1,3 +1,10 @@
+## [2.8.0-ha1.1.1](https://github.com/ha-ddns-updater/ha-ddns-updater/compare/2.8.0-ha1.1.0...2.8.0-ha1.1.1) (2026-04-19)
+
+### Bug Fixes
+
+* don't reset addon-version when upstream-version changes ([1fbf5b2](https://github.com/ha-ddns-updater/ha-ddns-updater/commit/1fbf5b2fb2f7454b515d3757cf10b1e1b189a6f6))
+* downgrade to test pipeline ([a87d8d1](https://github.com/ha-ddns-updater/ha-ddns-updater/commit/a87d8d12df3f872ccda56e0a033674191e4dec27))
+
 ## [2.9.0-ha1.1.0](https://github.com/ha-ddns-updater/ha-ddns-updater/compare/2.9.0-ha1.0.6...2.9.0-ha1.1.0) (2026-04-19)
 
 ### Features
