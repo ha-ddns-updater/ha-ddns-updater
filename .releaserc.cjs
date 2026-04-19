@@ -4,7 +4,7 @@ module.exports = {
   // is e.g. "2.9.0-ha1.0.5". The ${version} placeholder is the addon semver
   // only (e.g. "1.0.5") and is what semantic-release uses for bumping logic.
   // Keep this prefix in sync with the FROM line in ddns-updater/Dockerfile.
-  tagFormat: "2.8.1-ha${version}",
+  tagFormat: "2.9.0-ha${version}",
   plugins: [
     [
       "@semantic-release/commit-analyzer",
