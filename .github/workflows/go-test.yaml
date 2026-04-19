@@ -1,0 +1,35 @@
+name: Go Tests
+
+on:
+  workflow_dispatch: {}
+  push:
+    paths:
+      - 'ddns-updater/**'
+      - '.github/workflows/go-test.yaml'
+  pull_request:
+    paths:
+      - 'ddns-updater/**'
+      - '.github/workflows/go-test.yaml'
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: Run addon Go tests
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ddns-updater
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v6
+
+      - name: Set up Go
+        uses: actions/setup-go@v6
+        with:
+          go-version-file: ddns-updater/go.mod
+          cache-dependency-path: ddns-updater/go.sum
+
+      - name: Run Go tests
+        run: go test -count=1 ./...
