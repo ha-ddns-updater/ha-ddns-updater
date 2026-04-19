@@ -48,3 +48,4 @@ jobs:
           add-paths: |
             ddns-updater/Dockerfile
             ddns-updater/config.yaml
+            .releaserc.cjs
