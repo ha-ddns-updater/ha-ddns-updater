@@ -1,3 +1,9 @@
+## [2.9.0-ha1.2.6](https://github.com/ha-ddns-updater/ha-ddns-updater/compare/2.9.0-ha1.2.5...2.9.0-ha1.2.6) (2026-04-19)
+
+### Bug Fixes
+
+* list syntax for schema again ([6f90fe9](https://github.com/ha-ddns-updater/ha-ddns-updater/commit/6f90fe922531db3b1afd4e3b77093e36b625ee86))
+
 ## [2.9.0-ha1.2.5](https://github.com/ha-ddns-updater/ha-ddns-updater/compare/2.9.0-ha1.2.4...2.9.0-ha1.2.5) (2026-04-19)
 
 ### Bug Fixes
