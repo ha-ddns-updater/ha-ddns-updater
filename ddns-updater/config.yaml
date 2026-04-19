@@ -33,7 +33,18 @@ options:
       owner: "subdomain"
       email: "user@example.com"
       key: "your-api-key"
-schema: false # disabled because the linter doesn't like it
+schema:
+  environments:
+    PERIOD: str?
+    SERVER_ENABLED: list("yes", "no")?
+    LOG_LEVEL: list("debug", "info", "warning", "error")?
+  settings:
+    - provider: list("duckdns", "cloudflare")?
+      domain: str?
+      token: str? # duckdns
+      owner: str? # cloudflare
+      email: str? # cloudflare
+      key: str? # cloudflare
 image: "docker.io/haddnsupdater/ha-ddns-updater"
 # ingress: # TODO: might be useful for webui
 init: false
