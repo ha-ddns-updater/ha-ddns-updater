@@ -1,3 +1,9 @@
+## [2.9.0-ha1.3.0](https://github.com/ha-ddns-updater/ha-ddns-updater/compare/2.9.0-ha1.2.8...2.9.0-ha1.3.0) (2026-04-19)
+
+### Features
+
+* have a correct watchdog ([4ed374e](https://github.com/ha-ddns-updater/ha-ddns-updater/commit/4ed374ef8b027591e6ce385998296fc2e601fbac))
+
 ## [2.9.0-ha1.2.8](https://github.com/ha-ddns-updater/ha-ddns-updater/compare/2.9.0-ha1.2.7...2.9.0-ha1.2.8) (2026-04-19)
 
 ### Bug Fixes
