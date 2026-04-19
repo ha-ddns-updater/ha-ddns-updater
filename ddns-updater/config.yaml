@@ -8,6 +8,7 @@ arch:
 url: "https://github.com/ha-ddns-updater/ha-ddns-updater"
 # startup: application
 webui: "http://[HOST]:[PORT:8000]/"
+watchdog: "http://[HOST]:9999/"
 # boot: auto
 ports:
   "8000/tcp": 8000
