@@ -1,3 +1,9 @@
+## [2.9.0-ha1.2.1](https://github.com/ha-ddns-updater/ha-ddns-updater/compare/2.9.0-ha1.2.0...2.9.0-ha1.2.1) (2026-04-19)
+
+### Bug Fixes
+
+* set user to root to be able to read options.json ([447987d](https://github.com/ha-ddns-updater/ha-ddns-updater/commit/447987dfc93d349f3424ce9c8407841330603c40))
+
 ## [2.9.0-ha1.2.0](https://github.com/ha-ddns-updater/ha-ddns-updater/compare/2.9.0-ha1.1.1...2.9.0-ha1.2.0) (2026-04-19)
 
 ### Features
