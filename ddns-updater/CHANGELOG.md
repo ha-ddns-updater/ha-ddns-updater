@@ -1,3 +1,14 @@
+## [2.9.0-ha1.4.0](https://github.com/ha-ddns-updater/ha-ddns-updater/compare/2.9.0-ha1.3.0...2.9.0-ha1.4.0) (2026-04-19)
+
+### Features
+
+* use a ingress route instead of a port ([b29bc52](https://github.com/ha-ddns-updater/ha-ddns-updater/commit/b29bc52b9b593fa08b7b4244bb9d64ceea1f013d))
+
+### Bug Fixes
+
+* delete `CONFIG_FILEPATH` from schema because it must not be set by the user ([090010a](https://github.com/ha-ddns-updater/ha-ddns-updater/commit/090010ad968a7be83e4f685794f31271674b8ed4))
+* delete `HEALTH_SERVER_ADDRESS` because this would break the watchdog. ([64f1602](https://github.com/ha-ddns-updater/ha-ddns-updater/commit/64f160210b0441209601afc34a974597c68e2fa3))
+
 ## [2.9.0-ha1.3.0](https://github.com/ha-ddns-updater/ha-ddns-updater/compare/2.9.0-ha1.2.8...2.9.0-ha1.3.0) (2026-04-19)
 
 ### Features
