@@ -1,3 +1,9 @@
+## [2.9.0-ha1.5.1](https://github.com/ha-ddns-updater/ha-ddns-updater/compare/2.9.0-ha1.5.0...2.9.0-ha1.5.1) (2026-04-19)
+
+### Bug Fixes
+
+* increase healthcheck because it gets killed on rpi4 ([d0b288c](https://github.com/ha-ddns-updater/ha-ddns-updater/commit/d0b288c1989781f2e2bc923f02de537958f655a1))
+
 ## [2.9.0-ha1.5.0](https://github.com/ha-ddns-updater/ha-ddns-updater/compare/2.9.0-ha1.4.0...2.9.0-ha1.5.0) (2026-04-19)
 
 ### Features
