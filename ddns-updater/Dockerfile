@@ -19,5 +19,7 @@ FROM docker.io/qmcgaw/ddns-updater:2.9.0
 # Copy the Go entrypoint binary
 COPY --from=builder /build/entrypoint /entrypoint
 
+USER 0:0
+
 # Override the entrypoint to run our config transformer first
 ENTRYPOINT ["/entrypoint"]
