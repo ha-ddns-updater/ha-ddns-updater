@@ -1,3 +1,9 @@
+## [2.9.0-ha1.2.8](https://github.com/ha-ddns-updater/ha-ddns-updater/compare/2.9.0-ha1.2.7...2.9.0-ha1.2.8) (2026-04-19)
+
+### Bug Fixes
+
+* use host_network for ipv6 ([62d4ad6](https://github.com/ha-ddns-updater/ha-ddns-updater/commit/62d4ad66e595f70f6e22ac604d4179e23c56e397))
+
 ## [2.9.0-ha1.2.7](https://github.com/ha-ddns-updater/ha-ddns-updater/compare/2.9.0-ha1.2.6...2.9.0-ha1.2.7) (2026-04-19)
 
 ### Bug Fixes
