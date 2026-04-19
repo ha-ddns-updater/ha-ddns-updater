@@ -102,25 +102,14 @@ jobs:
       - name: Copy images to Docker Hub
         env:
           GHCR_SOURCE: ghcr.io/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}
+          GHCR_USERNAME: ${{ github.repository_owner }}
+          GHCR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           DOCKERHUB_DEST: ${{ env.DOCKERHUB_IMAGE }}
           DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
           DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
         run: |
-          # Create skopeo auth files
-          mkdir -p ~/.config/containers
-          cat > ~/.config/containers/auth.json <<EOF
-          {
-            "auths": {
-              "ghcr.io": {
-                "auth": "$(echo -n '${{ github.repository_owner }}:${{ secrets.GITHUB_TOKEN }}' | base64 -w0)"
-              },
-              "docker.io": {
-                "auth": "$(echo -n '${DOCKERHUB_USERNAME}:${DOCKERHUB_TOKEN}' | base64 -w0)"
-              }
-            }
-          }
-          EOF
-          chmod 600 ~/.config/containers/auth.json
+          echo "${DOCKERHUB_TOKEN}" | skopeo login --username "${DOCKERHUB_USERNAME}" --password-stdin docker.io
+          echo "${GHCR_TOKEN}" | skopeo login --username "${GHCR_USERNAME}" --password-stdin ghcr.io
 
           # Copy manifest with all tags
           skopeo copy --all docker://${GHCR_SOURCE}:${{ needs.init.outputs.release_version }} docker://${DOCKERHUB_DEST}:${{ needs.init.outputs.release_version }}
