@@ -36,8 +36,8 @@ options:
 schema:
   environments:
     PERIOD: str?
-    SERVER_ENABLED: list("yes", "no")?
-    LOG_LEVEL: list("debug", "info", "warning", "error")?
+    SERVER_ENABLED: list("yes"|"no")?
+    LOG_LEVEL: list("debug"|"info"|"warning"|"error")?
   settings:
     - provider: list("duckdns", "cloudflare")?
       domain: str?
