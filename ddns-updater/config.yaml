@@ -7,13 +7,10 @@ arch:
   - amd64
 url: "https://github.com/ha-ddns-updater/ha-ddns-updater"
 # startup: application
-webui: "http://[HOST]:[PORT:8000]/"
 watchdog: "http://[HOST]:9999/"
+ingress: true
+ingress_port: 8000
 # boot: auto
-ports:
-  "8000/tcp": 8000
-ports_description:
-  "8000/tcp": "Web UI for monitoring and management"
 host_network: true
 map:
   - type: data
@@ -103,7 +100,6 @@ schema:
     HTTP_TIMEOUT: str?
     SERVER_ENABLED: list(yes|no)?
     LISTENING_ADDRESS: str?
-    ROOT_URL: str?
     LOG_LEVEL: list(debug|info|warn|error)?
     LOG_CALLER: list(hidden|short)?
     DATADIR: str?
