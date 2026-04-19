@@ -1,3 +1,9 @@
+## [2.9.0-ha1.0.5](https://github.com/ha-ddns-updater/ha-ddns-updater/compare/2.9.0-ha1.0.4...2.9.0-ha1.0.5) (2026-04-19)
+
+### Bug Fixes
+
+* permissions for docker.io step ([fbd0cf4](https://github.com/ha-ddns-updater/ha-ddns-updater/commit/fbd0cf43ed135102c2d00ef16a0553c34422e5d4))
+
 ## [2.9.0-ha1.0.4](https://github.com/ha-ddns-updater/ha-ddns-updater/compare/2.9.0-ha1.0.3...2.9.0-ha1.0.4) (2026-04-19)
 
 ### Bug Fixes
