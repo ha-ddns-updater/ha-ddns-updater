@@ -1,3 +1,9 @@
+## [2.9.0-ha1.5.0](https://github.com/ha-ddns-updater/ha-ddns-updater/compare/2.9.0-ha1.4.0...2.9.0-ha1.5.0) (2026-04-19)
+
+### Features
+
+* replace deprecated watchdog with docker healthcheck. ([0c2ef64](https://github.com/ha-ddns-updater/ha-ddns-updater/commit/0c2ef64ac29ee3e421403631500ef80549d3f14d))
+
 ## [2.9.0-ha1.4.0](https://github.com/ha-ddns-updater/ha-ddns-updater/compare/2.9.0-ha1.3.0...2.9.0-ha1.4.0) (2026-04-19)
 
 ### Features
