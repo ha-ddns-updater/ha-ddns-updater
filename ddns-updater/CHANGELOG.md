@@ -1,3 +1,9 @@
+## [2.8.1-ha1.0.1](https://github.com/ha-ddns-updater/ha-ddns-updater/compare/2.8.1-ha1.0.0...2.8.1-ha1.0.1) (2026-04-19)
+
+### Bug Fixes
+
+* add releaserc to pr ([4b2de7d](https://github.com/ha-ddns-updater/ha-ddns-updater/commit/4b2de7d167e7eff5c71ebedbbbd356da02832161))
+
 ## 2.8.1-ha1.0.0 (2026-04-19)
 
 ### Features
