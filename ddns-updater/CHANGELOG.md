@@ -1,3 +1,9 @@
+## [2.9.0-ha1.2.4](https://github.com/ha-ddns-updater/ha-ddns-updater/compare/2.9.0-ha1.2.3...2.9.0-ha1.2.4) (2026-04-19)
+
+### Bug Fixes
+
+* try to have a correct schema to be able to save configuration ([9bcba46](https://github.com/ha-ddns-updater/ha-ddns-updater/commit/9bcba464fddb7d627e85b8ad0124dc72c3e9988c))
+
 ## [2.9.0-ha1.2.3](https://github.com/ha-ddns-updater/ha-ddns-updater/compare/2.9.0-ha1.2.2...2.9.0-ha1.2.3) (2026-04-19)
 
 ### Bug Fixes
