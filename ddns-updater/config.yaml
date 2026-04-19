@@ -107,7 +107,6 @@ schema:
     LOG_LEVEL: list(debug|info|warn|error)?
     LOG_CALLER: list(hidden|short)?
     DATADIR: str?
-    CONFIG_FILEPATH: str?
     UMASK: str?
     PUBLICIP_FETCHERS: str?
     PUBLICIP_HTTP_PROVIDERS: str?
