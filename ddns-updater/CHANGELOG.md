@@ -1,3 +1,9 @@
+## [2.9.0-ha1.0.4](https://github.com/ha-ddns-updater/ha-ddns-updater/compare/2.9.0-ha1.0.3...2.9.0-ha1.0.4) (2026-04-19)
+
+### Bug Fixes
+
+* use skopeo login instead of auth.json ([d898e87](https://github.com/ha-ddns-updater/ha-ddns-updater/commit/d898e87a57cef031e5d2d8be9489a4029d7143fc))
+
 ## [2.9.0-ha1.0.3](https://github.com/ha-ddns-updater/ha-ddns-updater/compare/2.9.0-ha1.0.2...2.9.0-ha1.0.3) (2026-04-18)
 
 ### Bug Fixes
