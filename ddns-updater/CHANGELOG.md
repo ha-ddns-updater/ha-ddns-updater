@@ -1,3 +1,9 @@
+## [2.9.0-ha1.0.6](https://github.com/ha-ddns-updater/ha-ddns-updater/compare/2.9.0-ha1.0.5...2.9.0-ha1.0.6) (2026-04-19)
+
+### Bug Fixes
+
+* allow curl to fail when updating docker.io description ([6abdc0a](https://github.com/ha-ddns-updater/ha-ddns-updater/commit/6abdc0ac350505d47e9f2da21735b7a480a52621))
+
 ## [2.9.0-ha1.0.5](https://github.com/ha-ddns-updater/ha-ddns-updater/compare/2.9.0-ha1.0.4...2.9.0-ha1.0.5) (2026-04-19)
 
 ### Bug Fixes
