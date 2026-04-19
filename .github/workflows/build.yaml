@@ -127,10 +127,10 @@ jobs:
           DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
           DOCKERHUB_IMAGE: ${{ env.DOCKERHUB_IMAGE }}
         run: |
-          TOKEN=$(curl -s -X POST -H 'Content-Type: application/json' \
+          TOKEN=$(curl -sf -X POST -H 'Content-Type: application/json' \
             --data '{"username":"'"${DOCKERHUB_USERNAME}"'","password":"'"${DOCKERHUB_TOKEN}"'"}' \
             https://hub.docker.com/v2/users/login | jq -r '.token')
-          curl -s -X PATCH \
+          curl -sf -X PATCH \
             -H 'Content-Type: application/json' \
             -H "Authorization: Bearer ${TOKEN}" \
             --data '{"full_description":'"$(jq -R -s '.' < README.md)"'}' \
