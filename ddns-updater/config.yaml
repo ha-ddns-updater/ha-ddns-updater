@@ -33,7 +33,7 @@ options:
       owner: "subdomain"
       email: "user@example.com"
       key: "your-api-key"
-# schema: false # disabled because the linter doesn't like it
+schema: false # disabled because the linter doesn't like it
 image: "docker.io/haddnsupdater/ha-ddns-updater"
 # ingress: # TODO: might be useful for webui
 init: false
