@@ -102,14 +102,15 @@ schema:
     LOG_LEVEL: list(debug|info|warn|error)?
     LOG_CALLER: list(hidden|short)?
     DATADIR: str?
-    UMASK: str?
-    PUBLICIP_FETCHERS: str?
-    PUBLICIP_HTTP_PROVIDERS: str?
-    PUBLICIPV4_HTTP_PROVIDERS: str?
-    PUBLICIPV6_HTTP_PROVIDERS: str?
-    PUBLICIP_DNS_PROVIDERS: str?
+    UMASK: match(^[0-7]{3,4}$)?
+    TZ: match(^$|^([A-Za-z_]+(?:/[A-Za-z0-9_+\-]+)+|UTC)$)?
+    PUBLICIP_FETCHERS: match(^\s*(all|http|dns)\s*(,\s*(all|http|dns)\s*)*$)?
+    PUBLICIP_HTTP_PROVIDERS: match(^\s*(all|ipify|ifconfig|ipinfo|spdyn|ipleak|icanhazip|ident|nnev|wtfismyip|seeip|changeip|url:https://[^,\s]+)\s*(,\s*(all|ipify|ifconfig|ipinfo|spdyn|ipleak|icanhazip|ident|nnev|wtfismyip|seeip|changeip|url:https://[^,\s]+)\s*)*$)?
+    PUBLICIPV4_HTTP_PROVIDERS: match(^\s*(all|ipleak|ipify|icanhazip|ident|nnev|wtfismyip|seeip|url:https://[^,\s]+)\s*(,\s*(all|ipleak|ipify|icanhazip|ident|nnev|wtfismyip|seeip|url:https://[^,\s]+)\s*)*$)?
+    PUBLICIPV6_HTTP_PROVIDERS: match(^\s*(all|ipleak|ipify|icanhazip|ident|nnev|wtfismyip|seeip|url:https://[^,\s]+)\s*(,\s*(all|ipleak|ipify|icanhazip|ident|nnev|wtfismyip|seeip|url:https://[^,\s]+)\s*)*$)?
+    PUBLICIP_DNS_PROVIDERS: match(^\s*(all|cloudflare|opendns)\s*(,\s*(all|cloudflare|opendns)\s*)*$)?
     PUBLICIP_DNS_TIMEOUT: str?
-    RESOLVER_ADDRESS: str?
+    RESOLVER_ADDRESS: match(^$|^[^:\s]+:\d{1,5}$|^\[[0-9A-Fa-f:]+\]:\d{1,5}$)?
     RESOLVER_TIMEOUT: str?
     HEALTH_HEALTHCHECKSIO_BASE_URL: str?
     HEALTH_HEALTHCHECKSIO_UUID: str?
@@ -123,7 +124,7 @@ schema:
       domain: str
       owner: str?
       ip_version: list(ipv4|ipv6|ipv4or6)?
-      ipv6_suffix: str?
+      ipv6_suffix: match(^[0-9A-Fa-f:]+/(?:[0-9]|[1-9][0-9]|1[01][0-9]|12[0-8])$)?
       # Provider-specific fields required by many providers:
       password: str?
       username: str?
@@ -140,7 +141,7 @@ schema:
       ipv4key: str?
       ipv6key: str?
       success_regex: str?
-      url: str?
+      url: match(^https://.+$)?
       # DynDNS:
       client_key: str?
       # Gandi:
@@ -156,7 +157,7 @@ schema:
       app_key: str?
       app_secret: str?
       consumer_key: str?
-      mode: str?
+      mode: match(^(api|dyndns)$)?
       # Porkbun:
       secret_api_key: str?
       # Route53:
@@ -166,10 +167,10 @@ schema:
       # Vultr:
       apikey: str?
       # Provider-specific fields optional for some providers:
-      ttl: int?
+      ttl: int(1,4294967295)?
       zone_identifier: str?
       proxied: bool?
-      user_service_key: str?
+      user_service_key: match(^v1\.0.+$)?
       dual_stack: bool?
       group: str?
       user: str?
