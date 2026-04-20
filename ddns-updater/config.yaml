@@ -124,44 +124,55 @@ schema:
       owner: str?
       ip_version: list(ipv4|ipv6|ipv4or6)?
       ipv6_suffix: str?
-      # Provider-specific (all optional, provider-dependent)
-      token: str?
-      key: str?
-      secret: str?
+      # Provider-specific fields required by many providers:
       password: str?
       username: str?
+      token: str?
+      key: str?
+      api_key: str?
+      secret: str?
       email: str?
+      # Aliyun:
       access_key_id: str?
       access_secret: str?
       region: str?
-      user_service_key: str?
-      zone_identifier: str?
-      proxied: bool?
-      ttl: int?
-      url: str?
+      # Custom:
       ipv4key: str?
       ipv6key: str?
       success_regex: str?
-      dual_stack: bool?
-      group: str?
+      url: str?
+      # DynDNS:
       client_key: str?
+      # Gandi:
       personal_access_token: str?
+      # GCP:
+      credentials: str?
       project: str?
       zone: str?
-      credentials: str?
-      api_key: str?
+      # Netcup:
+      customer_number: str?
+      # OVH:
+      api_endpoint: str?
+      app_key: str?
+      app_secret: str?
+      consumer_key: str?
+      mode: str?
+      # Porkbun:
       secret_api_key: str?
+      # Route53:
       access_key: str?
       secret_key: str?
       zone_id: str?
-      customer_number: str?
-      consumer_key: str?
-      app_key: str?
-      app_secret: str?
-      api_endpoint: str?
-      mode: str?
-      user: str?
+      # Vultr:
       apikey: str?
+      # Provider-specific fields optional for some providers:
+      ttl: int?
+      zone_identifier: str?
+      proxied: bool?
+      user_service_key: str?
+      dual_stack: bool?
+      group: str?
+      user: str?
 
 image: "docker.io/haddnsupdater/ha-ddns-updater"
 init: false
