@@ -24,7 +24,6 @@ settings:
 
 - **environments**: Map of environment variables passed directly to `ddns-updater`
     - Examples: `PERIOD`, `SERVER_ENABLED`, `LOG_LEVEL`, `HTTP_TIMEOUT`, `TZ`
-    - Values are converted to strings before being passed to the process
     - Setting `LOG_LEVEL` to `debug` also enables addon entrypoint diagnostics, including a listing of the options file directory and a raw dump of `options.json` before launching `ddns-updater`
 
 - **settings**: Array of DNS provider configurations

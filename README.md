@@ -16,15 +16,8 @@ A Home Assistant addon that wraps [qdm12/ddns-updater](https://github.com/qdm12/
 
 3. Configure your DNS providers
 
-## Releases
-
-Releases are automated with `semantic-release` on pushes to `main`.
-
-- Git tags use the add-on semver only (for example `1.0.5`), without a `v` prefix.
-- `ddns-updater/config.yaml` keeps the full runtime version schema `UPSTREAM-haADDON` (for example `2.9.0-ha1.0.5`).
-- The upstream part is preserved by release automation and only changed by the upstream bump workflow.
-- Upstream bump PRs use `feat:` commits so merging them triggers a minor add-on bump.
-- Release notes are written to `ddns-updater/CHANGELOG.md` by semantic-release.
+## Configuration
+See the addon-documentation in [ddns-updater/README.md](https://github.com/ha-ddns-updater/ha-ddns-updater/blob/main/ddns-updater/README.md) and [DOCS.md](https://github.com/ha-ddns-updater/ha-ddns-updater/blob/main/ddns-updater/DOCS.md)
 
 ## Sponsor
 
