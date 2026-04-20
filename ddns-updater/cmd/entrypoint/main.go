@@ -15,13 +15,25 @@ import (
 
 const defaultHAOptionsFilepath = "/updater/data/options.json"
 
+type logLevel int
+
+const (
+	logLevelDebug logLevel = iota
+	logLevelInfo
+	logLevelWarn
+	logLevelError
+	logLevelFatal
+)
+
+var activeLogLevel = logLevelInfo
+
 func main() {
 	optionsFilepath := envOrDefault("HA_OPTIONS_FILEPATH", defaultHAOptionsFilepath)
 
 	// Read Home Assistant options from the configured filepath.
 	optionsData, err := os.ReadFile(optionsFilepath)
 	if err != nil {
-		log.Fatalf("Failed to read options file %q: %v", optionsFilepath, err)
+		fatalf("Failed to read options file %q: %v", optionsFilepath, err)
 	}
 
 	// Parse options
@@ -30,20 +42,22 @@ func main() {
 	}
 
 	if err := json.Unmarshal(optionsData, &options); err != nil {
-		log.Fatalf("Failed to parse options.json: %v", err)
+		fatalf("Failed to parse options.json: %v", err)
 	}
 
-	if isDebugLogLevel(options.Environments["LOG_LEVEL"]) {
+	activeLogLevel = parseLogLevel(options.Environments["LOG_LEVEL"])
+
+	if shouldLog(logLevelDebug) {
 		logOptionsDiagnostics(optionsFilepath, optionsData)
 	}
 
-	log.Printf("Using options file as ddns-updater config: %s", optionsFilepath)
+	logf(logLevelInfo, "Using options file as ddns-updater config: %s", optionsFilepath)
 
 	// Merge all environment overrides from options and ensure config filepath points
 	// to the mapped Home Assistant options file.
 	env, err := mergedEnvironment(os.Environ(), options.Environments)
 	if err != nil {
-		log.Fatalf("Failed to build environment: %v", err)
+		fatalf("Failed to build environment: %v", err)
 	}
 	env = setEnv(env, "CONFIG_FILEPATH", optionsFilepath)
 
@@ -51,16 +65,16 @@ func main() {
 	// ROOT_URL so ddns-updater serves assets correctly behind the ingress proxy.
 	// This is skipped gracefully when not running under HA (no SUPERVISOR_TOKEN).
 	if ingressPath, err := fetchIngressPath(); err != nil {
-		log.Printf("Could not fetch ingress path from Supervisor API (not running under HA?): %v", err)
+		logf(logLevelWarn, "Could not fetch ingress path from Supervisor API (not running under HA?): %v", err)
 	} else if ingressPath != "" {
-		log.Printf("Setting ROOT_URL to ingress path: %s", ingressPath)
+		logf(logLevelInfo, "Setting ROOT_URL to ingress path: %s", ingressPath)
 		env = setEnv(env, "ROOT_URL", ingressPath)
 	}
 
 	// Replace this process with ddns-updater using syscall.Exec
 	err = syscall.Exec("/updater/ddns-updater", []string{"ddns-updater"}, env)
 	if err != nil {
-		log.Fatalf("Failed to exec ddns-updater: %v", err)
+		fatalf("Failed to exec ddns-updater: %v", err)
 	}
 }
 
@@ -72,27 +86,39 @@ func envOrDefault(key, fallback string) string {
 	return value
 }
 
-func isDebugLogLevel(value interface{}) bool {
+func parseLogLevel(value interface{}) logLevel {
 	if value == nil {
-		return false
+		return logLevelInfo
 	}
-	return strings.EqualFold(strings.TrimSpace(fmt.Sprint(value)), "debug")
+
+	switch strings.ToLower(strings.TrimSpace(fmt.Sprint(value))) {
+	case "debug":
+		return logLevelDebug
+	case "warn", "warning":
+		return logLevelWarn
+	case "error":
+		return logLevelError
+	case "fatal":
+		return logLevelFatal
+	default:
+		return logLevelInfo
+	}
 }
 
 func logOptionsDiagnostics(optionsFilepath string, optionsData []byte) {
 	optionsDir := filepath.Dir(optionsFilepath)
-	log.Printf("DEBUG: listing options directory %q", optionsDir)
+	logf(logLevelDebug, "listing options directory %q", optionsDir)
 
 	entries, err := os.ReadDir(optionsDir)
 	if err != nil {
-		log.Printf("DEBUG: failed to list options directory %q: %v", optionsDir, err)
+		logf(logLevelDebug, "failed to list options directory %q: %v", optionsDir, err)
 	} else {
 		for _, line := range formatDirEntries(entries) {
-			log.Printf("DEBUG: options dir entry: %s", line)
+			logf(logLevelDebug, "options dir entry: %s", line)
 		}
 	}
 
-	log.Printf("DEBUG: options file dump %q:\n%s", optionsFilepath, optionsData)
+	logf(logLevelDebug, "options file dump %q:\n%s", optionsFilepath, optionsData)
 }
 
 func formatDirEntries(entries []os.DirEntry) []string {
@@ -152,6 +178,43 @@ func setEnv(env []string, key, value string) []string {
 		}
 	}
 	return append(env, prefix+value)
+}
+
+func shouldLog(level logLevel) bool {
+	if level == logLevelFatal {
+		return true
+	}
+	return level >= activeLogLevel
+}
+
+func (l logLevel) String() string {
+	switch l {
+	case logLevelDebug:
+		return "DEBUG"
+	case logLevelInfo:
+		return "INFO"
+	case logLevelWarn:
+		return "WARN"
+	case logLevelError:
+		return "ERROR"
+	case logLevelFatal:
+		return "FATAL"
+	default:
+		return "INFO"
+	}
+}
+
+func logf(level logLevel, format string, args ...interface{}) {
+	if !shouldLog(level) {
+		return
+	}
+	allArgs := append([]interface{}{level.String()}, args...)
+	log.Printf("[%s] "+format, allArgs...)
+}
+
+func fatalf(format string, args ...interface{}) {
+	logf(logLevelFatal, format, args...)
+	os.Exit(1)
 }
 
 // fetchIngressPath queries the HA Supervisor API to retrieve the ingress path

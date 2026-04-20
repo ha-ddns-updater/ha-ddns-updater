@@ -9,30 +9,33 @@ import (
 	"testing"
 )
 
-func TestIsDebugLogLevel(t *testing.T) {
+func TestParseLogLevel(t *testing.T) {
 	t.Parallel()
 
 	testCases := map[string]struct {
 		value interface{}
-		debug bool
+		level logLevel
 	}{
-		"nil":               {value: nil, debug: false},
-		"empty":             {value: "", debug: false},
-		"exact":             {value: "debug", debug: true},
-		"mixed case":        {value: "DeBuG", debug: true},
-		"trimmed":           {value: " debug ", debug: true},
-		"info":              {value: "info", debug: false},
-		"number":            {value: 123, debug: false},
-		"boolean":           {value: true, debug: false},
-		"stringer friendly": {value: []byte("debug"), debug: false},
+		"nil":               {value: nil, level: logLevelInfo},
+		"empty":             {value: "", level: logLevelInfo},
+		"debug exact":       {value: "debug", level: logLevelDebug},
+		"debug mixed case":  {value: "DeBuG", level: logLevelDebug},
+		"debug trimmed":     {value: " debug ", level: logLevelDebug},
+		"warn":              {value: "warn", level: logLevelWarn},
+		"warning":           {value: "warning", level: logLevelWarn},
+		"error":             {value: "error", level: logLevelError},
+		"fatal":             {value: "fatal", level: logLevelFatal},
+		"number":            {value: 123, level: logLevelInfo},
+		"boolean":           {value: true, level: logLevelInfo},
+		"stringer friendly": {value: []byte("debug"), level: logLevelInfo},
 	}
 
 	for name, testCase := range testCases {
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
-			debug := isDebugLogLevel(testCase.value)
-			if debug != testCase.debug {
-				t.Fatalf("expected debug=%t, got %t", testCase.debug, debug)
+			level := parseLogLevel(testCase.value)
+			if level != testCase.level {
+				t.Fatalf("expected level=%s, got %s", testCase.level, level)
 			}
 		})
 	}
@@ -70,8 +73,6 @@ func TestFormatDirEntries(t *testing.T) {
 }
 
 func TestLogOptionsDiagnostics(t *testing.T) {
-	t.Parallel()
-
 	tempDir := t.TempDir()
 	optionsFilepath := filepath.Join(tempDir, "options.json")
 	optionsData := []byte("{\n  \"environments\": {\"LOG_LEVEL\": \"debug\"}\n}\n")
@@ -85,19 +86,22 @@ func TestLogOptionsDiagnostics(t *testing.T) {
 	buffer := bytes.NewBuffer(nil)
 	previousWriter := log.Writer()
 	previousFlags := log.Flags()
+	previousLevel := activeLogLevel
 	log.SetOutput(buffer)
 	log.SetFlags(0)
+	activeLogLevel = logLevelDebug
 	defer log.SetOutput(previousWriter)
 	defer log.SetFlags(previousFlags)
+	defer func() { activeLogLevel = previousLevel }()
 
 	logOptionsDiagnostics(optionsFilepath, optionsData)
 
 	output := buffer.String()
 	checks := []string{
-		`DEBUG: listing options directory ` + "\"" + tempDir + "\"",
-		"DEBUG: options dir entry: options.json",
-		"DEBUG: options dir entry: providers/",
-		`DEBUG: options file dump ` + "\"" + optionsFilepath + "\"",
+		`[DEBUG] listing options directory ` + "\"" + tempDir + "\"",
+		"[DEBUG] options dir entry: options.json",
+		"[DEBUG] options dir entry: providers/",
+		`[DEBUG] options file dump ` + "\"" + optionsFilepath + "\"",
 		string(optionsData),
 	}
 	for _, check := range checks {
