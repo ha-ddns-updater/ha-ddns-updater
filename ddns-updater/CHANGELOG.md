@@ -1,3 +1,17 @@
+## [2.9.0-ha1.7.0](https://github.com/ha-ddns-updater/ha-ddns-updater/compare/2.9.0-ha1.6.1...2.9.0-ha1.7.0) (2026-04-21)
+
+### Features
+
+* ability to access data directory ([a5c2208](https://github.com/ha-ddns-updater/ha-ddns-updater/commit/a5c2208a2fddb4bbfef14cd77d7c6e63bd0d2a0f))
+* add more rules for schema validation ([2e0eb66](https://github.com/ha-ddns-updater/ha-ddns-updater/commit/2e0eb6649fc3d4362fa6d9b783527d05d69b738c))
+* better logging ([faf7a5e](https://github.com/ha-ddns-updater/ha-ddns-updater/commit/faf7a5e6aa2cf2a048201b1bea4ef6b2cffa1af5))
+* order settings by importance and add descriptions ([117d53a](https://github.com/ha-ddns-updater/ha-ddns-updater/commit/117d53ac2093ae277b5823e338365aec60fe8acc))
+
+### Bug Fixes
+
+* handle unhandled error on supervisor api ([317144e](https://github.com/ha-ddns-updater/ha-ddns-updater/commit/317144eddb6e5024aa9439d3ea805039242c93cd))
+* remove separate healthcheck and use upstream ([282958b](https://github.com/ha-ddns-updater/ha-ddns-updater/commit/282958b9b115482d83e4ca2157fed9d442cbc25e))
+
 ## [2.9.0-ha1.6.1](https://github.com/ha-ddns-updater/ha-ddns-updater/compare/2.9.0-ha1.6.0...2.9.0-ha1.6.1) (2026-04-19)
 
 ### Bug Fixes
