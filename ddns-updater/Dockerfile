@@ -10,6 +10,7 @@ COPY go.mod go.sum ./
 RUN go mod download
 
 COPY cmd/ ./cmd/
+COPY internal/ ./internal/
 
 RUN go build -trimpath -ldflags="-s -w" -o entrypoint cmd/entrypoint/main.go
 
