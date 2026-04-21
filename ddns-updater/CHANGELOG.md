@@ -1,3 +1,9 @@
+## [2.9.0-ha1.7.1](https://github.com/ha-ddns-updater/ha-ddns-updater/compare/2.9.0-ha1.7.0...2.9.0-ha1.7.1) (2026-04-21)
+
+### Bug Fixes
+
+* move files across EXDEV ([e3baf81](https://github.com/ha-ddns-updater/ha-ddns-updater/commit/e3baf81ef04866be1707ab94576ab837dd02877e))
+
 ## [2.9.0-ha1.7.0](https://github.com/ha-ddns-updater/ha-ddns-updater/compare/2.9.0-ha1.6.1...2.9.0-ha1.7.0) (2026-04-21)
 
 ### Features
