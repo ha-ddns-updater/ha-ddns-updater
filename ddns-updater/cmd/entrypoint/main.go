@@ -11,6 +11,8 @@ import (
 	"strings"
 	"syscall"
 	"time"
+
+	"github.com/ha-ddns-updater/ha-ddns-updater/internal/filemove"
 )
 
 const (
@@ -213,7 +215,7 @@ func migrateLegacyDataFiles(fromDir, toDir string) error {
 			return fmt.Errorf("checking destination %q: %w", destinationPath, statErr)
 		}
 
-		if renameErr := os.Rename(sourcePath, destinationPath); renameErr != nil {
+		if renameErr := filemove.MovePath(sourcePath, destinationPath); renameErr != nil {
 			return fmt.Errorf("moving %q to %q: %w", sourcePath, destinationPath, renameErr)
 		}
 
