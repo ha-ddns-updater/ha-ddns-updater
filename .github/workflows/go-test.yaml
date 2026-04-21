@@ -16,8 +16,16 @@ permissions:
 
 jobs:
   test:
-    name: Run addon Go tests
-    runs-on: ubuntu-latest
+    name: Run addon Go tests (${{ matrix.arch }})
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - arch: amd64
+            runs_on: ubuntu-latest
+          - arch: arm64
+            runs_on: ubuntu-24.04-arm
+    runs-on: ${{ matrix.runs_on }}
     defaults:
       run:
         working-directory: ddns-updater
