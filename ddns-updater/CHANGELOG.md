@@ -1,3 +1,9 @@
+## [2.9.0-ha1.7.2](https://github.com/ha-ddns-updater/ha-ddns-updater/compare/2.9.0-ha1.7.1...2.9.0-ha1.7.2) (2026-04-21)
+
+### Bug Fixes
+
+* add missing internal package directory in Dockerfile ([c61def4](https://github.com/ha-ddns-updater/ha-ddns-updater/commit/c61def41e07c97ba6a4f60f174c90bf871da1eba))
+
 ## [2.9.0-ha1.7.1](https://github.com/ha-ddns-updater/ha-ddns-updater/compare/2.9.0-ha1.7.0...2.9.0-ha1.7.1) (2026-04-21)
 
 ### Bug Fixes
