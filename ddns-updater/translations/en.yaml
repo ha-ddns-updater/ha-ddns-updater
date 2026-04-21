@@ -24,9 +24,6 @@ configuration:
       LOG_CALLER:
         name: "LOG_CALLER"
         description: "Show caller information in logs (hidden, short). Default: hidden."
-      DATADIR:
-        name: "DATADIR"
-        description: "Internal directory used to read and write data files. Default: /updater/data."
       PUBLICIP_FETCHERS:
         name: "PUBLICIP_FETCHERS"
         description: "Comma-separated fetcher types used to detect the public IP (http,dns). Default: all."
@@ -60,9 +57,6 @@ configuration:
       BACKUP_PERIOD:
         name: "BACKUP_PERIOD"
         description: "Enable periodic zip backups when set to a duration (for example 72h15m). Default: 0 (disabled)."
-      BACKUP_DIRECTORY:
-        name: "BACKUP_DIRECTORY"
-        description: "Directory where backup zip files are written when backups are enabled. Default: /updater/data."
       SHOUTRRR_ADDRESSES:
         name: "SHOUTRRR_ADDRESSES"
         description: "Comma-separated Shoutrrr notification addresses."

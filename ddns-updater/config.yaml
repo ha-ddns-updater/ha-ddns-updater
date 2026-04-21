@@ -12,10 +12,8 @@ ingress_port: 8000
 # boot: auto
 host_network: true
 map:
-  - type: data
-    path: "/updater/data"
-environment:
-  HA_OPTIONS_FILEPATH: "/updater/data/options.json"
+  - type: addon_config
+    read_only: false
 legacy: true # TODO: necessary? false needs some image labels
 options:
   environments:
@@ -101,7 +99,6 @@ schema:
     LISTENING_ADDRESS: str?
     LOG_LEVEL: list(debug|info|warn|error)?
     LOG_CALLER: list(hidden|short)?
-    DATADIR: str?
     UMASK: match(^[0-7]{3,4}$)?
     TZ: match(^$|^([A-Za-z_]+(?:/[A-Za-z0-9_+\-]+)+|UTC)$)?
     PUBLICIP_FETCHERS: match(^\s*(all|http|dns)\s*(,\s*(all|http|dns)\s*)*$)?
@@ -115,7 +112,6 @@ schema:
     HEALTH_HEALTHCHECKSIO_BASE_URL: str?
     HEALTH_HEALTHCHECKSIO_UUID: str?
     BACKUP_PERIOD: str?
-    BACKUP_DIRECTORY: str?
     SHOUTRRR_ADDRESSES: str?
     SHOUTRRR_DEFAULT_TITLE: str?
     CONFIG: str?

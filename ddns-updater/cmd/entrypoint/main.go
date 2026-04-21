@@ -13,7 +13,12 @@ import (
 	"time"
 )
 
-const defaultHAOptionsFilepath = "/updater/data/options.json"
+const (
+	haOptionsFilepath    = "/data/options.json"
+	haDataDirectory      = "/data"
+	addonConfigDirectory = "/config"
+	ddnsUpdaterBinary    = "/updater/ddns-updater"
+)
 
 type logLevel int
 
@@ -28,12 +33,10 @@ const (
 var activeLogLevel = logLevelInfo
 
 func main() {
-	optionsFilepath := envOrDefault("HA_OPTIONS_FILEPATH", defaultHAOptionsFilepath)
-
-	// Read Home Assistant options from the configured filepath.
-	optionsData, err := os.ReadFile(optionsFilepath)
+	// Read Home Assistant options from the default Supervisor-mounted filepath.
+	optionsData, err := os.ReadFile(haOptionsFilepath)
 	if err != nil {
-		fatalf("Failed to read options file %q: %v", optionsFilepath, err)
+		fatalf("Failed to read options file %q: %v", haOptionsFilepath, err)
 	}
 
 	// Parse options
@@ -47,19 +50,25 @@ func main() {
 
 	activeLogLevel = parseLogLevel(options.Environments["LOG_LEVEL"])
 
-	if shouldLog(logLevelDebug) {
-		logOptionsDiagnostics(optionsFilepath, optionsData)
+	if err := migrateLegacyDataFiles(haDataDirectory, addonConfigDirectory); err != nil {
+		fatalf("Failed migrating legacy data files: %v", err)
 	}
 
-	logf(logLevelInfo, "Using options file as ddns-updater config: %s", optionsFilepath)
+	if shouldLog(logLevelDebug) {
+		logOptionsDiagnostics(haOptionsFilepath, optionsData, addonConfigDirectory)
+	}
 
-	// Merge all environment overrides from options and ensure config filepath points
-	// to the mapped Home Assistant options file.
+	logf(logLevelInfo, "Using options file as ddns-updater config: %s", haOptionsFilepath)
+
+	// Merge environment overrides from options and then force path-related values
+	// needed for Home Assistant mounts.
 	env, err := mergedEnvironment(os.Environ(), options.Environments)
 	if err != nil {
 		fatalf("Failed to build environment: %v", err)
 	}
-	env = setEnv(env, "CONFIG_FILEPATH", optionsFilepath)
+	env = setEnv(env, "CONFIG_FILEPATH", haOptionsFilepath)
+	env = setEnv(env, "DATADIR", addonConfigDirectory)
+	env = setEnv(env, "BACKUP_DIRECTORY", addonConfigDirectory)
 
 	// Fetch the ingress path from the HA Supervisor API and inject it as
 	// ROOT_URL so ddns-updater serves assets correctly behind the ingress proxy.
@@ -72,18 +81,10 @@ func main() {
 	}
 
 	// Replace this process with ddns-updater using syscall.Exec
-	err = syscall.Exec("/updater/ddns-updater", []string{"ddns-updater"}, env)
+	err = syscall.Exec(ddnsUpdaterBinary, []string{"ddns-updater"}, env)
 	if err != nil {
 		fatalf("Failed to exec ddns-updater: %v", err)
 	}
-}
-
-func envOrDefault(key, fallback string) string {
-	value := os.Getenv(key)
-	if value == "" {
-		return fallback
-	}
-	return value
 }
 
 func parseLogLevel(value interface{}) logLevel {
@@ -105,20 +106,25 @@ func parseLogLevel(value interface{}) logLevel {
 	}
 }
 
-func logOptionsDiagnostics(optionsFilepath string, optionsData []byte) {
+func logOptionsDiagnostics(optionsFilepath string, optionsData []byte, addonConfigDir string) {
 	optionsDir := filepath.Dir(optionsFilepath)
-	logf(logLevelDebug, "listing options directory %q", optionsDir)
-
-	entries, err := os.ReadDir(optionsDir)
-	if err != nil {
-		logf(logLevelDebug, "failed to list options directory %q: %v", optionsDir, err)
-	} else {
-		for _, line := range formatDirEntries(entries) {
-			logf(logLevelDebug, "options dir entry: %s", line)
-		}
-	}
+	logDirectoryEntries("options", optionsDir)
+	logDirectoryEntries("addon config", addonConfigDir)
 
 	logf(logLevelDebug, "options file dump %q:\n%s", optionsFilepath, optionsData)
+}
+
+func logDirectoryEntries(label, directory string) {
+	logf(logLevelDebug, "listing %s directory %q", label, directory)
+
+	entries, err := os.ReadDir(directory)
+	if err != nil {
+		logf(logLevelDebug, "failed to list %s directory %q: %v", label, directory, err)
+	} else {
+		for _, line := range formatDirEntries(entries) {
+			logf(logLevelDebug, "%s dir entry: %s", label, line)
+		}
+	}
 }
 
 func formatDirEntries(entries []os.DirEntry) []string {
@@ -178,6 +184,48 @@ func setEnv(env []string, key, value string) []string {
 		}
 	}
 	return append(env, prefix+value)
+}
+
+func migrateLegacyDataFiles(fromDir, toDir string) error {
+	if err := os.MkdirAll(toDir, 0o755); err != nil {
+		return fmt.Errorf("creating destination directory %q: %w", toDir, err)
+	}
+
+	entries, err := os.ReadDir(fromDir)
+	if err != nil {
+		return fmt.Errorf("listing source directory %q: %w", fromDir, err)
+	}
+
+	migratedAny := false
+	for _, entry := range entries {
+		name := entry.Name()
+		if name == filepath.Base(haOptionsFilepath) {
+			continue
+		}
+
+		sourcePath := filepath.Join(fromDir, name)
+		destinationPath := filepath.Join(toDir, name)
+
+		if _, statErr := os.Stat(destinationPath); statErr == nil {
+			logf(logLevelWarn, "Skipping legacy data migration for %q: destination %q already exists", sourcePath, destinationPath)
+			continue
+		} else if !os.IsNotExist(statErr) {
+			return fmt.Errorf("checking destination %q: %w", destinationPath, statErr)
+		}
+
+		if renameErr := os.Rename(sourcePath, destinationPath); renameErr != nil {
+			return fmt.Errorf("moving %q to %q: %w", sourcePath, destinationPath, renameErr)
+		}
+
+		migratedAny = true
+		logf(logLevelInfo, "Migrated legacy data from %q to %q", sourcePath, destinationPath)
+	}
+
+	if !migratedAny {
+		logf(logLevelDebug, "No legacy data files found in %q that require migration", fromDir)
+	}
+
+	return nil
 }
 
 func shouldLog(level logLevel) bool {
