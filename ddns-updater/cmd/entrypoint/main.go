@@ -285,7 +285,11 @@ func fetchIngressPath() (string, error) {
 	if err != nil {
 		return "", fmt.Errorf("calling Supervisor API: %w", err)
 	}
-	defer resp.Body.Close()
+	defer func() {
+		if closeErr := resp.Body.Close(); closeErr != nil {
+			logf(logLevelWarn, "Failed to close Supervisor API response body: %v", closeErr)
+		}
+	}()
 
 	if resp.StatusCode != http.StatusOK {
 		return "", fmt.Errorf("Supervisor API returned status %d", resp.StatusCode)
