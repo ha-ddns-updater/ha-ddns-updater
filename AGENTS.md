@@ -22,6 +22,8 @@ This addon uses semantic versioning with upstream tracking:
 
 When upstream bumps to `v2.10.0`, the next addon release resets addon patch: `2.10.0-ha1.0.0`.
 
+> **Agent policy:** Agents must never bump addon versions manually. Version bumps are handled by CI.
+
 ## Development Setup
 
 The `qdm12/ddns-updater` directory is a **local reference for maintainer work only**—it is not part of the published addon and is intentionally excluded from git via `.git/info/exclude`.
