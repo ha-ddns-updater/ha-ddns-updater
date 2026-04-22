@@ -1,3 +1,9 @@
+## [2.9.0-ha1.7.3](https://github.com/ha-ddns-updater/ha-ddns-updater/compare/2.9.0-ha1.7.2...2.9.0-ha1.7.3) (2026-04-22)
+
+### Bug Fixes
+
+* change the order of provider and domain ([4e1fb80](https://github.com/ha-ddns-updater/ha-ddns-updater/commit/4e1fb80305ae5155e6c66083aaf92fa33ceb7973))
+
 ## [2.9.0-ha1.7.2](https://github.com/ha-ddns-updater/ha-ddns-updater/compare/2.9.0-ha1.7.1...2.9.0-ha1.7.2) (2026-04-21)
 
 ### Bug Fixes

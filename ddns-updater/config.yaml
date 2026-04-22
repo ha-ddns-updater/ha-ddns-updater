@@ -1,5 +1,5 @@
 name: DDNS Updater
-version: "2.9.0-ha1.7.2"
+version: "2.9.0-ha1.7.3"
 slug: ddns_updater
 description: Universal DNS updater with support for multiple DNS providers utilizing ddns-updater.
 arch:
