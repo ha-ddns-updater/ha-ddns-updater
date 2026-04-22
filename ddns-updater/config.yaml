@@ -82,11 +82,11 @@ options:
     # vultr:         apikey; ttl (optional)
     # zoneedit:      username, token
 
-    - provider: "duckdns"
-      domain: "example.duckdns.org"
+    - domain: "example.duckdns.org"
+      provider: "duckdns"
       token: "00000000-0000-0000-0000-000000000000"
-    - provider: "cloudflare"
-      domain: "example.com"
+    - domain: "example.com"
+      provider: "cloudflare"
       owner: "subdomain"
       email: "user@example.com"
       key: "your-api-key"
@@ -116,8 +116,8 @@ schema:
     SHOUTRRR_DEFAULT_TITLE: str?
     CONFIG: str?
   settings:
-    - provider: list(aliyun|allinkl|changeip|cloudflare|custom|dd24|ddnss|desec|digitalocean|dnsomatic|dnspod|domeneshop|dondominio|dreamhost|duckdns|dyn|dynu|dynv6|easydns|freedns|gandi|gcp|godaddy|goip|he|hetzner|infomaniak|inwx|ionos|linode|loopia|luadns|myaddr|namecheap|namecom|namesilo|netcup|njalla|noip|nowdns|opendns|ovh|porkbun|route53|selfhostde|servercow|spdyn|strato|variomedia|vultr|zoneedit)
-      domain: str
+    - domain: str
+      provider: list(aliyun|allinkl|changeip|cloudflare|custom|dd24|ddnss|desec|digitalocean|dnsomatic|dnspod|domeneshop|dondominio|dreamhost|duckdns|dyn|dynu|dynv6|easydns|freedns|gandi|gcp|godaddy|goip|he|hetzner|infomaniak|inwx|ionos|linode|loopia|luadns|myaddr|namecheap|namecom|namesilo|netcup|njalla|noip|nowdns|opendns|ovh|porkbun|route53|selfhostde|servercow|spdyn|strato|variomedia|vultr|zoneedit)
       owner: str?
       ip_version: list(ipv4|ipv6|ipv4or6)?
       ipv6_suffix: match(^[0-9A-Fa-f:]+/(?:[0-9]|[1-9][0-9]|1[01][0-9]|12[0-8])$)?

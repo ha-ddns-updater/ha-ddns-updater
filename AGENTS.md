@@ -143,8 +143,8 @@ Keep as `str?` due provider-specific formats or conditional requirements:
 When upstream adds or changes provider fields in `schema.settings`, apply this ordering:
 
 1. **Group 1: Fields required by all providers** (fixed order)
+   - `domain` — listed first because the Home Assistant configuration UI uses the first field as the display label for each settings entry, making the domain the primary identifier visible to the user
    - `provider`
-   - `domain`
 
 2. **Group 2: Fields optional for all providers** (fixed order)
    - `owner`

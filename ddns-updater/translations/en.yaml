@@ -71,12 +71,12 @@ configuration:
     name: "Provider settings"
     description: "List of DNS provider configurations. Each item represents one record update rule."
     fields:
-      provider:
-        name: "Provider"
-        description: "DNS provider slug used for this item (required: all providers)."
       domain:
         name: "Domain"
         description: "Domain or host to update; multiple values can be comma-separated where supported (required: all providers)."
+      provider:
+        name: "Provider"
+        description: "DNS provider slug used for this item (required: all providers)."
       owner:
         name: "Owner"
         description: "Legacy owner/host field; prefer encoding host(s) in domain (optional: all providers)."
