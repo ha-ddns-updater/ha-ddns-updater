@@ -9,6 +9,7 @@ url: "https://github.com/ha-ddns-updater/ha-ddns-updater"
 # startup: application
 ingress: true
 ingress_port: 8000
+panel_icon: mdi:dns
 # boot: auto
 host_network: true
 map:
