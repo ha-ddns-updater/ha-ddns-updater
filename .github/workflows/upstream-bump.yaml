@@ -22,30 +22,117 @@ jobs:
         with:
           node-version: "22"
 
+      - name: Install Node.js dependencies
+        run: npm ci
+
       - name: Detect and apply upstream patch tag update
         id: detect
-        run: node .github/scripts/upstream-bump.mjs --write
+        run: node .github/scripts/upstream-bump-detect.mjs --write
+
+      - name: Check out upstream reference tag
+        if: steps.detect.outputs.update_needed == 'true'
+        run: |
+          rm -rf qdm12/ddns-updater
+          mkdir -p qdm12
+          git clone --depth 1 --branch "v${{ steps.detect.outputs.upstream_version }}" \
+            https://github.com/qdm12/ddns-updater.git qdm12/ddns-updater
+
+      - name: Sync config and translations from upstream
+        if: steps.detect.outputs.update_needed == 'true'
+        id: sync
+        run: node .github/scripts/upstream-bump-sync-config.mjs --upstream-dir qdm12/ddns-updater --write
+
+      - name: Build pull request metadata
+        if: steps.detect.outputs.update_needed == 'true'
+        id: prmeta
+        env:
+          UPSTREAM_VERSION: ${{ steps.detect.outputs.upstream_version }}
+          HAS_BREAKING_CHANGE: ${{ steps.sync.outputs.has_breaking_change }}
+          CHANGE_REPORT: ${{ steps.sync.outputs.change_report }}
+        run: |
+          python - <<'PY'
+          import json
+          import os
+          import urllib.parse
+
+          upstream = os.environ.get("UPSTREAM_VERSION", "")
+          has_breaking = os.environ.get("HAS_BREAKING_CHANGE", "false").lower() == "true"
+          encoded = os.environ.get("CHANGE_REPORT", "")
+          report = {}
+          if encoded:
+            decoded = urllib.parse.unquote(encoded)
+            if decoded:
+              report = json.loads(decoded)
+
+          def format_section(title, payload):
+            added = payload.get("added", [])
+            removed = payload.get("removed", [])
+            changed = payload.get("changed", [])
+            lines = [f"### {title}"]
+            lines.append(f"- Added: {', '.join(added) if added else 'none'}")
+            lines.append(f"- Removed: {', '.join(removed) if removed else 'none'}")
+            if changed and isinstance(changed[0], dict):
+              changed_summary = ", ".join(item.get("field", "") for item in changed if item.get("field"))
+            else:
+              changed_summary = ", ".join(changed)
+            lines.append(f"- Changed: {changed_summary if changed_summary else 'none'}")
+            return "\n".join(lines)
+
+          env_report = report.get("environments", {})
+          settings_report = report.get("settings", {})
+          t_report = report.get("translations", {})
+          t_env_report = t_report.get("environments", {})
+          t_settings_report = t_report.get("settings", {})
+
+          body_parts = [
+            "This PR updates the wrapped upstream image version and syncs addon schema/translations.",
+            "",
+            f"- Upstream image: `docker.io/qmcgaw/ddns-updater:{upstream}`",
+            "- Add-on version in `ddns-updater/config.yaml` is preserved and only bumped by semantic-release.",
+            "",
+            format_section("Schema environments", env_report),
+            "",
+            format_section("Schema settings", settings_report),
+            "",
+            format_section("Translations environments", t_env_report),
+            "",
+            format_section("Translations settings", t_settings_report),
+            "",
+            "Generated-by: .github/workflows/upstream-bump.yaml",
+          ]
+          body = "\n".join(body_parts)
+
+          commit_message = f"feat: bump upstream ddns-updater to {upstream}"
+          trailers = ["Generated-by: .github/workflows/upstream-bump.yaml"]
+          if has_breaking:
+            trailers.insert(0, "BREAKING CHANGE: schema fields removed from config.yaml")
+          commit_message = commit_message + "\n\n" + "\n".join(trailers)
+
+          output_path = os.environ["GITHUB_OUTPUT"]
+          with open(output_path, "a", encoding="utf-8") as f:
+            f.write("commit_message<<EOF\n")
+            f.write(commit_message)
+            f.write("\nEOF\n")
+            f.write("body<<EOF\n")
+            f.write(body)
+            f.write("\nEOF\n")
+          PY
 
       - name: Create pull request
         if: steps.detect.outputs.update_needed == 'true'
         uses: peter-evans/create-pull-request@v7
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          commit-message: "feat: bump upstream ddns-updater to ${{ steps.detect.outputs.upstream_version }}"
+          commit-message: ${{ steps.prmeta.outputs.commit_message }}
           branch: "feature/upstream-ddns-updater-${{ steps.detect.outputs.upstream_version }}"
           delete-branch: true
           title: "feat: bump upstream ddns-updater to ${{ steps.detect.outputs.upstream_version }}"
-          body: |
-            This PR updates the wrapped upstream image version.
-
-            - Upstream image: `docker.io/qmcgaw/ddns-updater:${{ steps.detect.outputs.upstream_version }}`
-            - Add-on version in `ddns-updater/config.yaml` is preserved and only bumped by semantic-release.
-
-            Auto-generated by `.github/workflows/upstream-bump.yaml`.
+          body: ${{ steps.prmeta.outputs.body }}
           labels: |
             dependencies
             automated
           add-paths: |
             ddns-updater/Dockerfile
             ddns-updater/config.yaml
+            ddns-updater/translations/en.yaml
             .releaserc.cjs

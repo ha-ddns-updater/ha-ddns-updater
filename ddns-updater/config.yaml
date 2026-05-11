@@ -1,7 +1,8 @@
 name: DDNS Updater
 version: "2.9.0-ha1.7.3"
 slug: ddns_updater
-description: Universal DNS updater with support for multiple DNS providers utilizing ddns-updater.
+description: Universal DNS updater with support for multiple DNS providers
+  utilizing ddns-updater.
 arch:
   - aarch64
   - amd64
@@ -19,67 +20,6 @@ options:
     SERVER_ENABLED: "yes"
     LOG_LEVEL: "info"
   settings:
-    # Common fields for all providers:
-    #   provider: (required) provider name — see list below
-    #   domain: (required) domain or subdomain (e.g. sub.example.com, or example.com,sub.example.com for multiple)
-    #   owner: (optional, retro-compat) subdomain / host owner — prefer encoding in domain field
-    #   ip_version: ipv4 | ipv6 | ipv4or6 (default: ipv4or6)
-    #   ipv6_suffix: IPv6 suffix prefix (e.g. ::/64)
-    #
-    # Provider-specific fields:
-    #
-    # aliyun:        access_key_id, access_secret, region
-    # allinkl:       username, password
-    # changeip:      username, password
-    # cloudflare:    token OR (key + email) OR user_service_key; zone_identifier (optional), proxied (bool), ttl (uint)
-    # custom:        url, ipv4key, ipv6key, success_regex
-    # dd24:          password
-    # ddnss.de:      username, password, dual_stack (bool)
-    # desec:         token
-    # digitalocean:  token
-    # dnsomatic:     username, password
-    # dnspod:        token
-    # domeneshop:    token, secret
-    # dondominio:    username, key
-    # dreamhost:     key
-    # duckdns:       token
-    # dyn:           username, client_key
-    # dynu:          username, password, group (optional)
-    # dynv6:         token
-    # easydns:       username, token
-    # freedns:       token
-    # gandi:         personal_access_token OR key; ttl (optional)
-    # gcp:           project, zone, credentials (JSON object)
-    # godaddy:       key, secret
-    # goip:          username, password
-    # he.net:        password
-    # hetzner:       token; zone_identifier (optional), ttl (optional)
-    # infomaniak:    username, password
-    # inwx:          username, password
-    # ionos:         api_key
-    # linode:        token
-    # loopia:        username, password
-    # luadns:        email, token
-    # myaddr:        key
-    # namecheap:     password
-    # name.com:      username, token; ttl (optional)
-    # namesilo:      key; ttl (optional)
-    # netcup:        customer_number, api_key, password
-    # njalla:        key
-    # noip:          username, password
-    # nowdns:        username, password
-    # opendns:       username, password
-    # ovh:           mode (api|dyndns); api mode: app_key, app_secret, consumer_key, api_endpoint; dyndns mode: username, password
-    # porkbun:       secret_api_key, api_key; ttl (optional)
-    # route53:       access_key, secret_key, zone_id; ttl (optional)
-    # selfhost.de:   username, password
-    # servercow:     username, password; ttl (optional)
-    # spdyn:         user + password OR token
-    # strato:        password
-    # variomedia:    email, password
-    # vultr:         apikey; ttl (optional)
-    # zoneedit:      username, token
-
     - domain: "example.duckdns.org"
       provider: "duckdns"
       token: "00000000-0000-0000-0000-000000000000"
@@ -119,7 +59,6 @@ schema:
       owner: str?
       ip_version: list(ipv4|ipv6|ipv4or6)?
       ipv6_suffix: match(^[0-9A-Fa-f:]+/(?:[0-9]|[1-9][0-9]|1[01][0-9]|12[0-8])$)?
-      # Provider-specific fields required by many providers:
       password: str?
       username: str?
       token: str?
@@ -127,40 +66,29 @@ schema:
       api_key: str?
       secret: str?
       email: str?
-      # Aliyun:
       access_key_id: str?
       access_secret: str?
       region: str?
-      # Custom:
       ipv4key: str?
       ipv6key: str?
       success_regex: str?
       url: match(^https://.+$)?
-      # DynDNS:
       client_key: str?
-      # Gandi:
       personal_access_token: str?
-      # GCP:
       credentials: str?
       project: str?
       zone: str?
-      # Netcup:
       customer_number: str?
-      # OVH:
       api_endpoint: str?
       app_key: str?
       app_secret: str?
       consumer_key: str?
       mode: match(^(api|dyndns)$)?
-      # Porkbun:
       secret_api_key: str?
-      # Route53:
       access_key: str?
       secret_key: str?
       zone_id: str?
-      # Vultr:
       apikey: str?
-      # Provider-specific fields optional for some providers:
       ttl: int(1,4294967295)?
       zone_identifier: str?
       proxied: bool?
@@ -168,6 +96,5 @@ schema:
       dual_stack: bool?
       group: str?
       user: str?
-
 image: "docker.io/haddnsupdater/ha-ddns-updater"
 init: false
