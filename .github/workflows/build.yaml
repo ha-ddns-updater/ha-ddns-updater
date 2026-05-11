@@ -22,6 +22,7 @@ jobs:
     outputs:
       matrix: ${{ steps.matrix.outputs.matrix }}
       release_version: ${{ steps.release-version.outputs.value }}
+      created: ${{ steps.created.outputs.value }}
     steps:
       - uses: actions/checkout@v6
 
@@ -41,6 +42,10 @@ jobs:
             exit 1
           fi
           echo "value=${VERSION}" >> "${GITHUB_OUTPUT}"
+
+      - name: Create OCI timestamp
+        id: created
+        run: echo "value=$(date -u +'%Y-%m-%dT%H:%M:%SZ')" >> "${GITHUB_OUTPUT}"
 
   build:
     name: Build ${{ matrix.arch }} image
@@ -62,6 +67,11 @@ jobs:
           context: ./ddns-updater
           cosign: false
           arch: ${{ matrix.arch }}
+          build-args: |
+            VERSION=${{ needs.init.outputs.release_version }}
+            CREATED=${{ needs.init.outputs.created }}
+            COMMIT=${{ github.sha }}
+            BUILD_ARCH=${{ matrix.arch }}
           container-registry-password: ${{ secrets.GITHUB_TOKEN }}
           image: ${{ matrix.image }}
           image-tags: |

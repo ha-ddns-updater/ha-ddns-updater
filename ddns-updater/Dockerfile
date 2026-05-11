@@ -17,6 +17,27 @@ RUN go build -trimpath -ldflags="-s -w" -o entrypoint cmd/entrypoint/main.go
 # Final stage: extend the qdm12 image
 FROM docker.io/qmcgaw/ddns-updater:2.9.0
 
+ARG VERSION=unknown
+ARG CREATED="an unknown date"
+ARG COMMIT=unknown
+ARG BUILD_ARCH=unknown
+
+LABEL \
+	io.hass.type="addon" \
+	io.hass.version="${VERSION}" \
+	io.hass.arch="${BUILD_ARCH}" \
+	io.hass.name="DDNS Updater" \
+	io.hass.description="Universal DNS updater with support for multiple DNS providers utilizing ddns-updater." \
+	org.opencontainers.image.authors="Quentin McGaw <quentin.mcgaw@gmail.com>, Matthias Blümel <blaimi@blaimi.de>" \
+	org.opencontainers.image.version="${VERSION}" \
+	org.opencontainers.image.created="${CREATED}" \
+	org.opencontainers.image.revision="${COMMIT}" \
+	org.opencontainers.image.url="https://github.com/ha-ddns-updater/ha-ddns-updater" \
+	org.opencontainers.image.documentation="https://github.com/ha-ddns-updater/ha-ddns-updater/blob/main/ddns-updater/README.md" \
+	org.opencontainers.image.source="https://github.com/ha-ddns-updater/ha-ddns-updater" \
+	org.opencontainers.image.title="ha-ddns-updater" \
+	org.opencontainers.image.description="Home Assistant add-on wrapper for qdm12/ddns-updater"
+
 # Copy the Go entrypoint binary
 COPY --from=builder /build/entrypoint /entrypoint
 

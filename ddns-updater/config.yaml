@@ -15,7 +15,6 @@ host_network: true
 map:
   - type: addon_config
     read_only: false
-legacy: true # TODO: necessary? false needs some image labels
 options:
   environments:
     PERIOD: "5m"
