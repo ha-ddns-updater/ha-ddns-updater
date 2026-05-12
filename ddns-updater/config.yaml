@@ -1,5 +1,5 @@
 name: DDNS Updater
-version: "2.9.0-ha1.8.0"
+version: "2.10.0-ha1.8.0"
 slug: ddns_updater
 description: Universal DNS updater with support for multiple DNS providers
   utilizing ddns-updater.
@@ -55,7 +55,7 @@ schema:
     CONFIG: str?
   settings:
     - domain: str
-      provider: list(aliyun|allinkl|changeip|cloudflare|custom|dd24|ddnss|desec|digitalocean|dnsomatic|dnspod|domeneshop|dondominio|dreamhost|duckdns|dyn|dynu|dynv6|easydns|freedns|gandi|gcp|godaddy|goip|he|hetzner|infomaniak|inwx|ionos|linode|loopia|luadns|myaddr|namecheap|namecom|namesilo|netcup|njalla|noip|nowdns|opendns|ovh|porkbun|route53|selfhostde|servercow|spdyn|strato|variomedia|vultr|zoneedit)
+      provider: list(aliyun|allinkl|changeip|cloudflare|custom|dd24|ddnss|desec|digitalocean|dnsomatic|dnspod|domeneshop|dondominio|dreamhost|duckdns|dyn|dynu|dynv6|easydns|freedns|gandi|gcp|godaddy|goip|he|hetzner|hetznercloud|infomaniak|inwx|ionos|ipv64|linode|loopia|luadns|myaddr|namecheap|namecom|namesilo|netcup|njalla|noip|nowdns|opendns|ovh|porkbun|route53|scaleway|selfhostde|servercow|spaceship|spdyn|strato|variomedia|vercel|vultr|zoneedit)
       owner: str?
       ip_version: list(ipv4|ipv6|ipv4or6)?
       ipv6_suffix: match(^[0-9A-Fa-f:]+/(?:[0-9]|[1-9][0-9]|1[01][0-9]|12[0-8])$)?
@@ -66,6 +66,7 @@ schema:
       api_key: str?
       secret: str?
       email: str?
+      secret_key: str?
       access_key_id: str?
       access_secret: str?
       region: str?
@@ -86,8 +87,8 @@ schema:
       mode: match(^(api|dyndns)$)?
       secret_api_key: str?
       access_key: str?
-      secret_key: str?
       zone_id: str?
+      api_secret: str?
       apikey: str?
       ttl: int(1,4294967295)?
       zone_identifier: str?
@@ -96,5 +97,6 @@ schema:
       dual_stack: bool?
       group: str?
       user: str?
+      team_id: str?
 image: "docker.io/haddnsupdater/ha-ddns-updater"
 init: false

@@ -127,15 +127,15 @@ configuration:
       token:
         name: Token
         description: "Token setting (required: deSEC, DigitalOcean, DNSPod, Domeneshop,
-          DuckDNS, DynV6, EasyDNS, FreeDNS, Hetzner, Linode, LuaDNS, Name.com,
-          Zoneedit; optional: Cloudflare, Spdyn)."
+          DuckDNS, DynV6, EasyDNS, FreeDNS, Hetzner, HetznerCloud, Linode,
+          LuaDNS, Name.com, Vercel, Zoneedit; optional: Cloudflare, Spdyn)."
       key:
         name: Key
         description: "Key setting (required: Cloudflare, DonDominio, Dreamhost, Gandi,
-          GoDaddy, Myaddr, NameSilo, Njalla)."
+          GoDaddy, IPv64, Myaddr, NameSilo, Njalla)."
       api_key:
         name: Api Key
-        description: "Api Key setting (required: Ionos, Netcup, Porkbun)."
+        description: "Api Key setting (required: Ionos, Netcup, Porkbun, Spaceship)."
       secret:
         name: Secret
         description: "Secret setting (required: Domeneshop, GoDaddy)."
@@ -143,6 +143,9 @@ configuration:
         name: Email
         description: "Email setting (required: LuaDNS, Variomedia.de; optional:
           Cloudflare)."
+      secret_key:
+        name: Secret Key
+        description: "Secret Key setting (required: Route53, Scaleway)."
       access_key_id:
         name: Access Key Id
         description: "Access Key Id setting (required: Aliyun)."
@@ -203,19 +206,20 @@ configuration:
       access_key:
         name: Access Key
         description: "Access Key setting (required: Route53)."
-      secret_key:
-        name: Secret Key
-        description: "Secret Key setting (required: Route53)."
       zone_id:
         name: Zone Id
         description: "Zone Id setting (required: Route53)."
+      api_secret:
+        name: Api Secret
+        description: "Api Secret setting (required: Spaceship)."
       apikey:
         name: Apikey
         description: "Apikey setting (required: Vultr)."
       ttl:
         name: Ttl
-        description: "Ttl setting (optional: Cloudflare, Gandi, Hetzner, Name.com,
-          NameSilo, Porkbun, Route53, Servercow.de, Vultr)."
+        description: "Ttl setting (optional: Cloudflare, Gandi, Hetzner, HetznerCloud,
+          Name.com, NameSilo, Porkbun, Route53, Scaleway, Servercow.de,
+          Spaceship, Vercel, Vultr)."
       zone_identifier:
         name: Zone Identifier
         description: "Zone Identifier setting (optional: Cloudflare, Hetzner)."
@@ -234,3 +238,6 @@ configuration:
       user:
         name: User
         description: "User setting (optional: Spdyn)."
+      team_id:
+        name: Team Id
+        description: "Team Id setting (optional: Vercel)."
