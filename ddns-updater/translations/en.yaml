@@ -5,26 +5,28 @@ configuration:
     fields:
       PERIOD:
         name: PERIOD
-        description: "Interval between update checks. Default: 5m."
+        description: "Default period of IP address check, following [this
+          format](https://golang.org/pkg/time/#ParseDuration). Default: 5m."
       UPDATE_COOLDOWN_PERIOD:
         name: UPDATE_COOLDOWN_PERIOD
-        description: "Cooldown between updates per record to avoid rate limits. Default:
-          5m."
+        description: "Duration to cooldown between updates for each record. This is
+          useful to avoid being rate limited or banned. Default: 5m."
       HTTP_TIMEOUT:
         name: HTTP_TIMEOUT
-        description: "Timeout for outbound HTTP requests. Default: 10s."
+        description: "Timeout for all HTTP requests. Default: 10s."
       SERVER_ENABLED:
         name: SERVER_ENABLED
         description: "Enable the web server and web UI. Default: yes."
       LISTENING_ADDRESS:
         name: LISTENING_ADDRESS
-        description: "Internal listening address for the web UI. Default: :8000."
+        description: "Internal TCP listening port for the web UI. Default: :8000."
       LOG_LEVEL:
         name: LOG_LEVEL
-        description: "Log verbosity level (debug, info, warning, error). Default: info."
+        description: "Level of logging, `debug`, `info`, `warning` or `error`. Default:
+          info."
       LOG_CALLER:
         name: LOG_CALLER
-        description: "Show caller information in logs (hidden, short). Default: hidden."
+        description: "Show caller per log line, `hidden` or `short`. Default: hidden."
       UMASK:
         name: UMASK
         description: "Umask to set for the program in octal, i.e. `0022`. Default:
@@ -34,56 +36,61 @@ configuration:
         description: Timezone to have accurate times, i.e. `America/Montreal`.
       PUBLICIP_FETCHERS:
         name: PUBLICIP_FETCHERS
-        description: "Comma-separated fetcher types used to detect the public IP
-          (http,dns). Default: all."
+        description: "Comma separated fetcher types to obtain the public IP address from
+          `http` and `dns`. Default: all."
       PUBLICIP_HTTP_PROVIDERS:
         name: PUBLICIP_HTTP_PROVIDERS
-        description: "Comma-separated HTTP providers used to detect public IPv4/IPv6.
-          Default: all."
+        description: "Comma separated providers to obtain the public IP address (ipv4 or
+          ipv6). See the [Public IP section](#public-ip). Default: all."
       PUBLICIPV4_HTTP_PROVIDERS:
         name: PUBLICIPV4_HTTP_PROVIDERS
-        description: "Comma-separated HTTP providers used to detect public IPv4 only.
-          Default: all."
+        description: "Comma separated providers to obtain the public IPv4 address only.
+          See the [Public IP section](#public-ip). Default: all."
       PUBLICIPV6_HTTP_PROVIDERS:
         name: PUBLICIPV6_HTTP_PROVIDERS
-        description: "Comma-separated HTTP providers used to detect public IPv6 only.
-          Default: all."
+        description: "Comma separated providers to obtain the public IPv6 address only.
+          See the [Public IP section](#public-ip). Default: all."
       PUBLICIP_DNS_PROVIDERS:
         name: PUBLICIP_DNS_PROVIDERS
-        description: "Comma-separated DNS providers used to detect public IP addresses.
-          Default: all."
+        description: "Comma separated providers to obtain the public IP address (IPv4
+          and/or IPv6). See the [Public IP section](#public-ip). Default: all."
       PUBLICIP_DNS_TIMEOUT:
         name: PUBLICIP_DNS_TIMEOUT
-        description: "DNS query timeout for public IP detection. Default: 3s."
+        description: "Public IP DNS query timeout. Default: 3s."
       RESOLVER_ADDRESS:
         name: RESOLVER_ADDRESS
-        description: "Plain DNS server address used to resolve configured domains
-          (useful for split DNS). Default: system/network resolver."
+        description: "A plaintext DNS address to use to resolve your domain names
+          defined in your settings only. For example it can be `1.1.1.1:53`.
+          This is useful for split dns, see
+          [#389](https://github.com/qdm12/ddns-updater/issues/389). Default:
+          Your network DNS."
       RESOLVER_TIMEOUT:
         name: RESOLVER_TIMEOUT
-        description: "Timeout used for resolver lookups when RESOLVER_ADDRESS is set.
-          Default: 5s."
+        description: RESOLVER_TIMEOUT environment variable.
       HEALTH_HEALTHCHECKSIO_BASE_URL:
         name: HEALTH_HEALTHCHECKSIO_BASE_URL
-        description: "Base URL for the healthchecks.io endpoint. Default:
-          https://hc-ping.com."
+        description: "Base URL for the [healthchecks.io](https://healthchecks.io)
+          server. Default: https://hc-ping.com."
       HEALTH_HEALTHCHECKSIO_UUID:
         name: HEALTH_HEALTHCHECKSIO_UUID
-        description: UUID used to identify this instance with healthchecks.io.
+        description: UUID to idenfity with the
+          [healthchecks.io](https://healthchecks.io) server.
       BACKUP_PERIOD:
         name: BACKUP_PERIOD
-        description: "Enable periodic zip backups when set to a duration (for example
-          72h15m). Default: 0 (disabled)."
+        description: "Set to a period (i.e. `72h15m`) to enable zip backups of
+          data/config.json and data/updates.json in a zip file. Default: 0."
       SHOUTRRR_ADDRESSES:
         name: SHOUTRRR_ADDRESSES
-        description: Comma-separated Shoutrrr notification addresses.
+        description: (optional) Comma separated list of [Shoutrrr
+          addresses](https://containrrr.dev/shoutrrr/v0.8/services/overview/)
+          (notification services).
       SHOUTRRR_DEFAULT_TITLE:
         name: SHOUTRRR_DEFAULT_TITLE
-        description: "Default title used for Shoutrrr notifications. Default: DDNS Updater."
+        description: "Default title for Shoutrrr notifications. Default: DDNS Updater."
       CONFIG:
         name: CONFIG
-        description: One-line JSON object containing the complete configuration;
-          overrides config file content when set.
+        description: One line JSON object containing the entire config (takes precedence
+          over config.json file) if specified.
 
   settings:
     name: "Provider settings"
@@ -92,151 +99,138 @@ configuration:
     fields:
       domain:
         name: Domain
-        description: "Domain or host to update; multiple values can be comma-separated
-          where supported (required: all providers)."
+        description: "Domain setting (required: all providers)."
       provider:
         name: Provider
-        description: "DNS provider slug used for this item (required: all providers)."
+        description: "Provider setting (required: all providers)."
       owner:
         name: Owner
-        description: "Legacy owner/host field; prefer encoding host(s) in domain
-          (optional: all providers)."
+        description: "Owner setting (optional: all providers)."
       ip_version:
-        name: IP version
-        description: "Which IP family to update (ipv4, ipv6, ipv4or6) (optional: all
-          providers)."
+        name: Ip Version
+        description: "Ip Version setting (optional: all providers)."
       ipv6_suffix:
-        name: IPv6 suffix
-        description: "IPv6 network prefix/suffix used when matching IPv6 addresses
-          (optional: all providers)."
+        name: Ipv6 Suffix
+        description: "Ipv6 Suffix setting (optional: all providers)."
       password:
         name: Password
-        description: "Account password or DDNS password (required: AllInkl, ChangeIP,
-          DD24, DDNSS.de, DNSOMatic, Dynu, GoIP.de, He.net, Infomaniak, INWX,
-          Loopia, Namecheap, Netcup, NoIP, Now-DNS, OpenDNS, Selfhost.de,
-          Servercow.de, Strato.de, Variomedia.de; optional: DynDNS, OVH,
-          Spdyn)."
+        description: "Password setting (required: Allinkl, ChangeIP, DD24, DDNSS.de,
+          DNSOMatic, Dynu, GoIP.de, He.net, Infomaniak, INWX, Loopia, Namecheap,
+          Netcup, NoIP, Now-DNS, OpenDNS, OVH, Selfhost.de, Servercow.de, Spdyn,
+          Strato.de, Variomedia.de; optional: DonDominio, Dyn)."
       username:
         name: Username
-        description: "Account username/login (required: AllInkl, ChangeIP, DDNSS.de,
-          DNSOMatic, DonDominio, DynDNS, Dynu, EasyDNS, GoIP.de, Infomaniak,
-          INWX, Loopia, Name.com, NoIP, Now-DNS, OpenDNS, Selfhost.de,
-          Servercow.de; optional: OVH)."
+        description: "Username setting (required: Allinkl, ChangeIP, DDNSS.de,
+          DNSOMatic, DonDominio, Dyn, Dynu, EasyDNS, GoIP.de, Infomaniak, INWX,
+          Loopia, Name.com, NoIP, Now-DNS, OpenDNS, OVH, Selfhost.de,
+          Servercow.de, Zoneedit)."
       token:
         name: Token
-        description: "API token credential (required: deSEC, DigitalOcean, DNSPod,
-          Domeneshop, DuckDNS, DynV6, EasyDNS, FreeDNS, Hetzner, LuaDNS,
-          Name.com, Zoneedit; optional: Cloudflare, Spdyn)."
+        description: "Token setting (required: deSEC, DigitalOcean, DNSPod, Domeneshop,
+          DuckDNS, DynV6, EasyDNS, FreeDNS, Hetzner, Linode, LuaDNS, Name.com,
+          Zoneedit; optional: Cloudflare, Spdyn)."
       key:
         name: Key
-        description: "API key credential (required: DonDominio, Dreamhost, GoDaddy,
-          Myaddr, NameSilo, Njalla; optional: Cloudflare, Gandi)."
+        description: "Key setting (required: Cloudflare, DonDominio, Dreamhost, Gandi,
+          GoDaddy, Myaddr, NameSilo, Njalla)."
       api_key:
-        name: API key
-        description: "Provider API key (required: Ionos, Netcup, Porkbun)."
+        name: Api Key
+        description: "Api Key setting (required: Ionos, Netcup, Porkbun)."
       secret:
         name: Secret
-        description: "API secret credential (required: Domeneshop, GoDaddy)."
+        description: "Secret setting (required: Domeneshop, GoDaddy)."
       email:
         name: Email
-        description: "Account email identifier (required: LuaDNS, Variomedia.de;
-          optional: Cloudflare)."
+        description: "Email setting (required: LuaDNS, Variomedia.de; optional:
+          Cloudflare)."
       access_key_id:
-        name: Access key ID
-        description: "Aliyun access key ID (required: Aliyun)."
+        name: Access Key Id
+        description: "Access Key Id setting (required: Aliyun)."
       access_secret:
-        name: Access secret
-        description: "Aliyun access key secret (required: Aliyun)."
+        name: Access Secret
+        description: "Access Secret setting (required: Aliyun)."
       region:
         name: Region
-        description: "Provider region identifier (required: Aliyun)."
+        description: "Region setting (required: Aliyun)."
       ipv4key:
-        name: IPv4 key
-        description: "Placeholder in the custom provider URL/body for IPv4 values
-          (required: Custom)."
+        name: Ipv4key
+        description: "Ipv4key setting (required: Custom)."
       ipv6key:
-        name: IPv6 key
-        description: "Placeholder in the custom provider URL/body for IPv6 values
-          (required: Custom)."
+        name: Ipv6key
+        description: "Ipv6key setting (required: Custom)."
       success_regex:
-        name: Success regex
-        description: "Regular expression used to validate successful custom provider
-          responses (required: Custom)."
+        name: Success Regex
+        description: "Success Regex setting (required: Custom)."
       url:
-        name: URL
-        description: "Update endpoint URL used by the custom provider (required: Custom)."
+        name: Url
+        description: "Url setting (required: Custom)."
       client_key:
-        name: Client key
-        description: "DynDNS client key (required: DynDNS)."
+        name: Client Key
+        description: "Client Key setting (required: Dyn)."
       personal_access_token:
-        name: Personal access token
-        description: "Gandi personal access token (required: Gandi unless key is used;
-          optional: Gandi)."
+        name: Personal Access Token
+        description: "Personal Access Token setting (required: Gandi)."
       credentials:
         name: Credentials
-        description: "Google Cloud service account credentials JSON (required: GCP)."
+        description: "Credentials setting (required: GCP)."
       project:
         name: Project
-        description: "Google Cloud project ID (required: GCP)."
+        description: "Project setting (required: GCP)."
       zone:
         name: Zone
-        description: "Google Cloud DNS managed zone name (required: GCP)."
+        description: "Zone setting (required: GCP)."
       customer_number:
-        name: Customer number
-        description: "Netcup customer number (required: Netcup)."
+        name: Customer Number
+        description: "Customer Number setting (required: Netcup)."
       api_endpoint:
-        name: API endpoint
-        description: "OVH API endpoint region/domain (required: OVH API mode)."
+        name: Api Endpoint
+        description: "Api Endpoint setting (required: OVH)."
       app_key:
-        name: App key
-        description: "OVH application key for API mode (required: OVH API mode)."
+        name: App Key
+        description: "App Key setting (required: OVH)."
       app_secret:
-        name: App secret
-        description: "OVH application secret for API mode (required: OVH API mode)."
+        name: App Secret
+        description: "App Secret setting (required: OVH)."
       consumer_key:
-        name: Consumer key
-        description: "OVH consumer key for API mode (required: OVH API mode)."
+        name: Consumer Key
+        description: "Consumer Key setting (required: OVH)."
       mode:
         name: Mode
-        description: "OVH mode selector (api or dyndns) (required: OVH)."
+        description: "Mode setting (required: OVH)."
       secret_api_key:
-        name: Secret API key
-        description: "Porkbun secret API key (required: Porkbun)."
+        name: Secret Api Key
+        description: "Secret Api Key setting (required: Porkbun)."
       access_key:
-        name: Access key
-        description: "AWS access key for Route53 (required: Route53)."
+        name: Access Key
+        description: "Access Key setting (required: Route53)."
       secret_key:
-        name: Secret key
-        description: "AWS secret key for Route53 (required: Route53)."
+        name: Secret Key
+        description: "Secret Key setting (required: Route53)."
       zone_id:
-        name: Zone ID
-        description: "Hosted zone ID for Route53 (required: Route53)."
+        name: Zone Id
+        description: "Zone Id setting (required: Route53)."
       apikey:
-        name: API key (legacy name)
-        description: "Vultr API key field name used by provider implementation
-          (required: Vultr)."
+        name: Apikey
+        description: "Apikey setting (required: Vultr)."
       ttl:
-        name: TTL
-        description: "DNS record TTL in seconds (optional: Cloudflare, Gandi, Hetzner,
-          Name.com, NameSilo, Porkbun, Route53, Servercow.de, Vultr)."
+        name: Ttl
+        description: "Ttl setting (optional: Cloudflare, Gandi, Hetzner, Name.com,
+          NameSilo, Porkbun, Route53, Servercow.de, Vultr)."
       zone_identifier:
-        name: Zone identifier
-        description: "Explicit DNS zone ID to avoid auto-discovery (optional:
-          Cloudflare, Hetzner)."
+        name: Zone Identifier
+        description: "Zone Identifier setting (optional: Cloudflare, Hetzner)."
       proxied:
         name: Proxied
-        description: "Enable Cloudflare proxy mode for records (optional: Cloudflare)."
+        description: "Proxied setting (optional: Cloudflare)."
       user_service_key:
-        name: User service key
-        description: "Cloudflare User Service Key authentication method (optional:
-          Cloudflare)."
+        name: User Service Key
+        description: "User Service Key setting (optional: Cloudflare)."
       dual_stack:
-        name: Dual stack
-        description: "Enable dual-stack behavior for the DDNSS.de provider (optional:
-          DDNSS.de)."
+        name: Dual Stack
+        description: "Dual Stack setting (optional: DDNSS.de)."
       group:
         name: Group
-        description: "Dynu group identifier for grouped updates (optional: Dynu)."
+        description: "Group setting (optional: Dynu)."
       user:
         name: User
-        description: "Spdyn username used with password authentication (optional: Spdyn)."
+        description: "User setting (optional: Spdyn)."

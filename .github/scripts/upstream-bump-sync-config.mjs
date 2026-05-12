@@ -762,25 +762,11 @@ function settingsUsageSummary(field, registry, providerSlugs, providerLabels) {
   return parts.join("; ");
 }
 
-function generateEnvironmentTranslationEntries(
-  envSchemaEntries,
-  readmeEnvVars,
-  existingFields,
-  newlyAddedKeys,
-) {
+function generateEnvironmentTranslationEntries(envSchemaEntries, readmeEnvVars) {
   const metadataByKey = new Map(readmeEnvVars.map((entry) => [entry.key, entry]));
-  const newlyAdded = new Set(newlyAddedKeys);
   const entries = [];
 
   for (const [key] of envSchemaEntries) {
-    const existing = existingFields.get(key);
-    if (existing) {
-      entries.push([key, existing]);
-      continue;
-    }
-
-    if (!newlyAdded.has(key)) continue;
-
     const metadata = metadataByKey.get(key);
     const description = envDescriptionFromReadme(metadata) || `${key} environment variable.`;
     entries.push([
@@ -800,20 +786,9 @@ function generateSettingsTranslationEntries(
   registry,
   providerSlugs,
   providerLabels,
-  existingFields,
-  newlyAddedKeys,
 ) {
-  const newlyAdded = new Set(newlyAddedKeys);
   const entries = [];
   for (const [key] of settingsSchemaEntries) {
-    const existing = existingFields.get(key);
-    if (existing) {
-      entries.push([key, existing]);
-      continue;
-    }
-
-    if (!newlyAdded.has(key)) continue;
-
     const title = titleCaseFieldName(key);
     const usage = settingsUsageSummary(key, registry, providerSlugs, providerLabels);
     entries.push([
@@ -1022,16 +997,12 @@ async function main() {
   const newEnvTranslationEntries = generateEnvironmentTranslationEntries(
     newEnvEntries,
     readmeEnvVars,
-    currentEnvTranslations,
-    envChanges.added,
   );
   const newSettingsTranslationEntries = generateSettingsTranslationEntries(
     newSettingsEntries,
     registry,
     providerSlugs,
     providerLabels,
-    currentSettingsTranslations,
-    settingsChanges.added,
   );
   const envTranslationChanges = computeTranslationChanges(
     currentEnvTranslations,

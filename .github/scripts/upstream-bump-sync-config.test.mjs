@@ -1273,6 +1273,14 @@ test("write mode rewrites files even when no semantic changes are detected", () 
   );
 
   try {
+    // First run normalizes regenerated translation text.
+    execFileSync("node", [SCRIPT_PATH.pathname, "--upstream-dir", upstreamDir, "--write"], {
+      cwd: fixtureDir,
+      env: process.env,
+      stdio: "pipe",
+    });
+
+    // Second run should be semantically unchanged but still rewrite files.
     const output = execFileSync(
       "node",
       [SCRIPT_PATH.pathname, "--upstream-dir", upstreamDir, "--write"],
