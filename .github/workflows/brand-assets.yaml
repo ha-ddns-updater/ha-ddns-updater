@@ -1,0 +1,75 @@
+name: Generate Brand Assets
+
+on:
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  generate-assets:
+    name: Generate add-on icon and logo
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v6
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: "22"
+
+      - name: Install Node.js dependencies
+        run: npm ci
+
+      - name: Read upstream version from add-on config
+        id: upstream
+        run: |
+          VERSION=$(grep '^version:' ddns-updater/config.yaml | sed -E 's/version:\s*"([0-9]+\.[0-9]+\.[0-9]+)-ha.*/\1/')
+          if [ -z "${VERSION}" ]; then
+            echo "Could not parse upstream version from ddns-updater/config.yaml" >&2
+            exit 1
+          fi
+          echo "version=${VERSION}" >> "${GITHUB_OUTPUT}"
+
+      - name: Check out upstream reference tag
+        run: |
+          rm -rf qdm12/ddns-updater
+          mkdir -p qdm12
+          git clone --depth 1 --branch "v${{ steps.upstream.outputs.version }}" \
+            https://github.com/qdm12/ddns-updater.git qdm12/ddns-updater
+
+      - name: Generate icon and logo from upstream SVG
+        id: generate
+        run: node .github/scripts/generate-brand-assets.mjs --upstream-dir qdm12/ddns-updater --write
+
+      - name: Create pull request
+        if: steps.generate.outputs.assets_changed == 'true'
+        uses: peter-evans/create-pull-request@v7
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: |
+            chore: refresh addon brand assets
+
+            Generated-by: .github/workflows/brand-assets.yaml
+          branch: automation/brand-assets
+          delete-branch: false
+          title: "chore: refresh addon brand assets"
+          body: |
+            This PR refreshes Home Assistant brand assets derived from upstream `readme/ddnsgopher.svg`.
+
+            - Upstream version: `${{ steps.generate.outputs.upstream_version }}`
+            - Icon: `ddns-updater/icon.png` (128x128)
+            - Logo: `ddns-updater/logo.png` (250x100)
+
+            Generated-by: `.github/workflows/brand-assets.yaml`
+          labels: |
+            automated
+          add-paths: |
+            ddns-updater/icon.png
+            ddns-updater/logo.png
+
+      - name: No changes detected
+        if: steps.generate.outputs.assets_changed != 'true'
+        run: echo "No icon/logo changes detected."

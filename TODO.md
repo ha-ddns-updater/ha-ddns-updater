@@ -1,4 +1,3 @@
-* icons
 * mention how to use ipv6_suffix with a linux device like HAOS behind a Fritz!Box (upstream?)
   ```shell
   ha network update end0 --ipv6-method auto --ipv6-privacy disabled --ipv6-addr-gen-mode eui64

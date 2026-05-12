@@ -97,3 +97,7 @@ Behavioral and regression coverage is in:
 - `.github/scripts/upstream-bump-sync-config.test.mjs`
 
 When changing sync behavior, update script + tests first, then keep this guide aligned at policy level only.
+
+## Brand Asset Sync
+
+`ddns-updater/icon.png` and `ddns-updater/logo.png` can be updated by executing the "Generate Brand Assets" workflow.
