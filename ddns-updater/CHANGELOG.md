@@ -1,3 +1,9 @@
+## [2.10.0-ha1.9.2](https://github.com/ha-ddns-updater/ha-ddns-updater/compare/2.10.0-ha1.9.1...2.10.0-ha1.9.2) (2026-05-12)
+
+### Bug Fixes
+
+* version number after failed release ([bd47b17](https://github.com/ha-ddns-updater/ha-ddns-updater/commit/bd47b175e7bf29111a9892d208d16523dcb4b1b6))
+
 ## [2.10.0-ha1.9.1](https://github.com/ha-ddns-updater/ha-ddns-updater/compare/2.10.0-ha1.9.0...2.10.0-ha1.9.1) (2026-05-12)
 
 ### Bug Fixes
