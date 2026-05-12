@@ -1,3 +1,9 @@
+## [2.10.0-ha1.9.0](https://github.com/ha-ddns-updater/ha-ddns-updater/compare/2.10.0-ha1.8.0...2.10.0-ha1.9.0) (2026-05-12)
+
+### Features
+
+* bump upstream ddns-updater to 2.10.0 ([ee6ce41](https://github.com/ha-ddns-updater/ha-ddns-updater/commit/ee6ce41bf55c6b10b851882d755562135033982e))
+
 ## [2.9.0-ha1.8.0](https://github.com/ha-ddns-updater/ha-ddns-updater/compare/2.9.0-ha1.7.3...2.9.0-ha1.8.0) (2026-05-12)
 
 ### Features
