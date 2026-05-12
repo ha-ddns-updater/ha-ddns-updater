@@ -1,3 +1,10 @@
+## [2.9.0-ha1.8.0](https://github.com/ha-ddns-updater/ha-ddns-updater/compare/2.9.0-ha1.7.3...2.9.0-ha1.8.0) (2026-05-12)
+
+### Features
+
+* add correct labels to the image and remove legacy mode ([29b8f95](https://github.com/ha-ddns-updater/ha-ddns-updater/commit/29b8f95dfa299f12b3762bf5190aee7c4b7db61f))
+* use a better panel_icon ([e4157d5](https://github.com/ha-ddns-updater/ha-ddns-updater/commit/e4157d547c1d88c68811c11524fc851b3552e883))
+
 ## [2.9.0-ha1.7.3](https://github.com/ha-ddns-updater/ha-ddns-updater/compare/2.9.0-ha1.7.2...2.9.0-ha1.7.3) (2026-04-22)
 
 ### Bug Fixes
