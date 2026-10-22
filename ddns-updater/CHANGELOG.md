@@ -1,3 +1,9 @@
+## [2.10.0-ha1.9.3](https://github.com/ha-ddns-updater/ha-ddns-updater/compare/2.10.0-ha1.9.2...2.10.0-ha1.9.3) (2026-10-22)
+
+### Bug Fixes
+
+* use "ipv4 or ipv6" as ip_version option value ([4563d6e](https://github.com/ha-ddns-updater/ha-ddns-updater/commit/4563d6e8c8713db1c6f0b83f80713959df82b3f5)), closes [#22](https://github.com/ha-ddns-updater/ha-ddns-updater/issues/22)
+
 ## [2.10.0-ha1.9.2](https://github.com/ha-ddns-updater/ha-ddns-updater/compare/2.10.0-ha1.9.1...2.10.0-ha1.9.2) (2026-05-12)
 
 ### Bug Fixes
