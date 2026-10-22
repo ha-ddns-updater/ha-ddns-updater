@@ -84,7 +84,7 @@ const SETTINGS_FIELD_CONSTRAINTS = {
   // provider: derived dynamically from upstream constants
   // Group 2 – universal optional
   owner: "str?",
-  ip_version: "list(ipv4|ipv6|ipv4or6)?",
+  ip_version: "list(ipv4|ipv6|ipv4 or ipv6)?",
   ipv6_suffix: "match(^[0-9A-Fa-f:]+/(?:[0-9]|[1-9][0-9]|1[01][0-9]|12[0-8])$)?",
   // Provider-specific constrained fields
   url: "match(^https://.+$)?",
@@ -640,7 +640,7 @@ function generateEnvSchemaEntries(currentEnvs, readmeKeys, goKeys) {
  *   - domain: str
  *     provider: list(...|...)?
  *     owner: str?
- *     ip_version: list(ipv4|ipv6|ipv4or6)?
+ *     ip_version: list(ipv4|ipv6|ipv4 or ipv6)?
  *     ipv6_suffix: match(...)?
  *     <group3 fields>
  *     <group4 fields>

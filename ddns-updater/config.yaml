@@ -57,7 +57,7 @@ schema:
     - domain: str
       provider: list(aliyun|allinkl|changeip|cloudflare|custom|dd24|ddnss|desec|digitalocean|dnsomatic|dnspod|domeneshop|dondominio|dreamhost|duckdns|dyn|dynu|dynv6|easydns|freedns|gandi|gcp|godaddy|goip|he|hetzner|hetznercloud|infomaniak|inwx|ionos|ipv64|linode|loopia|luadns|myaddr|namecheap|namecom|namesilo|netcup|njalla|noip|nowdns|opendns|ovh|porkbun|route53|scaleway|selfhostde|servercow|spaceship|spdyn|strato|variomedia|vercel|vultr|zoneedit)
       owner: str?
-      ip_version: list(ipv4|ipv6|ipv4or6)?
+      ip_version: list(ipv4|ipv6|ipv4 or ipv6)?
       ipv6_suffix: match(^[0-9A-Fa-f:]+/(?:[0-9]|[1-9][0-9]|1[01][0-9]|12[0-8])$)?
       password: str?
       username: str?
